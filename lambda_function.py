@@ -63,7 +63,8 @@ def lambda_handler(event, context):
             return query_get(headers, query)
     if path == '/default/RetroPixelApi/token':
         if method == 'POST':
-            form = parse_qs(body)
+            out = base64.b64decode(body).decode('utf-8')
+            form = parse_qs(out)
             return token_post(form)
     if path == '/default/RetroPixelApi/auth':
         environment = Environment(loader=FileSystemLoader(os.path.join(os.path.dirname(__file__), "templates"), encoding="utf-8"))
