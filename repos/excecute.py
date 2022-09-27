@@ -23,7 +23,8 @@ def excecute(body,req_id):
                     ref = db.reference(f'Devices/{id}/OnOff')
                     ref.set({'on':excecute["params"]["on"]})
                 if excecute["command"] == "action.devices.commands.ColorAbsolute":
-                    mqtt.publish(f"{id}/Color",excecute["params"]["color"]["spectrumRGB"] if "spectrumRGB" in excecute["params"]["color"].keys() else 16777215)
+                    color = excecute["params"]["color"]["spectrumRGB"] if "spectrumRGB" in excecute["params"]["color"].keys() else 16777215
+                    mqtt.publish(f"{id}/Color",str(color))
                     ref = db.reference(f'Devices/{id}/ColorSetting')
                     ref.set({'color':excecute["params"]["color"]})
             ref = db.reference(f'Devices/{id}/Online')

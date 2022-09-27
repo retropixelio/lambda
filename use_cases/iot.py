@@ -29,7 +29,7 @@ def connected(payload):
             OnOff = "true" if data["OnOff"]["on"] else "false"
             Color = data["ColorSetting"]["color"]["spectrumRGB"] if data["ColorSetting"]["color"].get("spectrumRGB") else 16777215
             mqtt.publish(f"{device}/OnOff",OnOff)
-            mqtt.publish(f"{device}/Color",Color)
+            mqtt.publish(f"{device}/Color",str(Color))
         # if payload["topic"].split('/')[1] == "OnOff":
         #     id = payload['topic'].split('/')[0]
         #     socketio.emit(id,{"branch":"OnOff","id":id,"state":True if payload["payload"] == "true" else False})
