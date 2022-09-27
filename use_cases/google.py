@@ -1,5 +1,4 @@
 import jwt
-import json
 
 from repos.sync import sync
 from repos.query import query

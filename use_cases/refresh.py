@@ -1,6 +1,5 @@
 import jwt
 import datetime
-import json
 
 from conf import settings
 from repos.response import response_object

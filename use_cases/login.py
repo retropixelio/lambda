@@ -1,5 +1,4 @@
 import bcrypt
-import json
 import jwt
 import datetime
 from firebase_admin import db
