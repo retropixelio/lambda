@@ -9,6 +9,7 @@ from use_cases.set import set_post
 from use_cases.devices import devices_get
 from use_cases.query import query_get
 from use_cases.auth import auth_get
+from use_cases.iot import connected
 from repos.response import response_object
 
 cred = credentials.Certificate("service-account.json")
@@ -17,6 +18,8 @@ firebase_admin.initialize_app(cred,{
 })
 
 def lambda_handler(event, context):
+    if event.get('eventType'):
+        return connected(event)
     body = json.loads(event['body']) if event.get('body') else {}
     path = event['path']
     method = event['httpMethod']
