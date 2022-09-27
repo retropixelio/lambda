@@ -8,3 +8,11 @@ def response_object(json_obj, status, headers = 'application/json'):
             'Content-Type':headers
         }
     }
+
+def redirect(url):
+    return {
+        'statusCode': 301,
+        'headers': {
+            'Location': url,
+        }
+    }
