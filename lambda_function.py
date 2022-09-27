@@ -31,7 +31,7 @@ def lambda_handler(event, context):
     if headers.get('Content-Type') == 'application/x-www-form-urlencoded':
         body = event['body']
     else:
-        body = json.loads(event['body'])
+        body = json.loads(event['body']) if event.get('body') else {}
     if method == 'OPTIONS':
         return {
             'statusCode': 200,
