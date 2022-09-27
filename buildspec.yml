@@ -9,7 +9,7 @@ phases:
   build:
     commands:
       - echo "Zipping deployment package..."
-      - zip -g deployment_package.zip function.py use_cases repos conf service-account.json env
+      - zip -g deployment_package.zip lambda_function.py use_cases repos conf service-account.json env
   post_build:
     commands:
       - echo "Updating lambda Function..."
