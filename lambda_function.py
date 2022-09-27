@@ -24,15 +24,14 @@ firebase_admin.initialize_app(cred,{
 def lambda_handler(event, context):
     if event.get('eventType'):
         return connected(event)
-    body = {}
-    if event.get('body'):
-        body = event['body']
-        if type(body) is dict:
-            body = json.loads(body)
     path = event['path']
     method = event['httpMethod']
     query = event['queryStringParameters']
     headers = event['headers']
+    if headers.get('Content-Type') == 'application/x-www-form-urlencoded':
+        body = event['body']
+    else:
+        body = json.loads(event['body'])
     if method == 'OPTIONS':
         return {
             'statusCode': 200,

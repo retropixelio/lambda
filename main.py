@@ -1,42 +1,3 @@
-# from multiprocessing import context
-# from flask import Flask, request, jsonify, render_template, redirect
-# # from flask_mqtt import Mqtt
-# from flask_cors import CORS
-# from flask_socketio import SocketIO
-# import firebase_admin
-# from firebase_admin import credentials
-# from firebase_admin import db
-# import bcrypt
-# import jwt
-# import urllib.parse
-# import datetime
-# import os
-# import threading
-# from secrets import token_hex
-# import time
-
-# from conf import settings
-# from repos.sync import sync
-# from repos.query import query
-# from repos.excecute import excecute
-# from repos.mqtt import Mqtt
-
-# app = Flask(__name__)
-
-# # app.config['MQTT_CLIENT_ID'] = 'localhost'
-# # app.config['MQTT_BROKER_URL'] = 'retropixel.cyou'
-# # app.config['MQTT_BROKER_PORT'] = 1883
-# # app.config['MQTT_USERNAME'] = 'admin'
-# # app.config['MQTT_PASSWORD'] = 'public'
-# # app.config['MQTT_KEEPALIVE'] = 30
-# # app.config['MQTT_TLS_ENABLED'] = False
-
-# SECRET = 'R1BhE53$yt76$RR1hB5YJM'
-
-# CORS(app)
-# mqtt = Mqtt()
-# socketio = SocketIO(app, cors_allowed_origins='*')
-
 # @app.route('/register', methods=['POST'])
 # def register():
 #     name = request.get_json()["name"]
@@ -63,34 +24,6 @@
 #     ref = db.reference(f"Users/{id}")
 #     ref.set({'active':True})
 #     return redirect("https://retropixel.tk", code=302)
-
-# @app.route('/')
-# def index():
-#     return redirect('https://retropixel.tk')
-
-# @app.route('/auth',methods=['GET', 'POST'])
-# def auth():
-#     if request.method == 'GET':
-#         return render_template('login.html',invalid='hidden')
-#     elif request.method == 'POST':
-#         user = request.form.get('userid')
-#         password = request.form.get('password')
-#         url = request.args.get('redirect_uri')
-#         state = request.args.get('state')
-#         ref = db.reference(f'Users')
-#         snapshot = ref.order_by_child('email').equal_to(user).get()
-#         verify = None
-#         for key, val in snapshot.items():
-#             verify = val
-#             id = key
-#         if not verify: return render_template('login.html',state=state,url=url)
-#         verify = verify["password"]
-#         if bcrypt.checkpw(password.encode('utf8'), verify.encode('utf8')):
-#             code = jwt.encode({"user": id}, SECRET, algorithm="HS256")
-#             return redirect(f'{url}?code={code}&state={state}')
-#         else:
-#             return render_template('login.html',state=state,url=url)
-#     else: return 'Bad request',400
 
 # @app.route('/token',methods=['POST'])
 # def token():
