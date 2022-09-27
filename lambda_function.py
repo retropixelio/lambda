@@ -1,6 +1,8 @@
 import json
 from firebase_admin import credentials
 import firebase_admin
+from jinja2 import Environment, FileSystemLoader
+import os
 
 from use_cases.login import login_post
 from use_cases.refresh import refresh_post
@@ -16,6 +18,8 @@ cred = credentials.Certificate("service-account.json")
 firebase_admin.initialize_app(cred,{
     'databaseURL': 'https://retropixel-8f415-default-rtdb.firebaseio.com/'
 })
+
+environment = Environment(loader=FileSystemLoader(os.path.join(os.path.dirname(__file__), "templates"), encoding="utf-8"))
 
 def lambda_handler(event, context):
     if event.get('eventType'):
@@ -54,5 +58,5 @@ def lambda_handler(event, context):
             return query_get(headers, query)
     if path == '/default/RetroPixelApi/auth':
         if method == 'GET':
-            return auth_get()
+            return auth_get(environment)
     return response_object(event, 404)

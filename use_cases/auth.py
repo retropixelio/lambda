@@ -1,21 +1,18 @@
 from firebase_admin import db
 import jwt
 import bcrypt
-from jinja2 import Environment, FileSystemLoader
+from jinja2 import Environment
 import os
 
 from conf import settings
 from repos.response import response_object, redirect
 
-def auth_get():
-    print(os.path.join(settings.BASE_DIR, "templates/"))
-    environment = Environment(loader=FileSystemLoader(os.path.join(settings.BASE_DIR, "templates/"), encoding="utf-8"))
+def auth_get(environment: Environment):
     template = environment.get_template('login.html')
     template = template.render(invalid='hidden')
     return response_object(template, 200, 'text/html')
 
-def auth_post(form, args):
-    environment = Environment(loader=FileSystemLoader(os.path.join(settings.BASE_DIR, "templates"), encoding="utf-8"))
+def auth_post(environment: Environment, form, args):
     template = environment.get_template('login.html')
     user = form.get('userid')
     password = form.get('password')
