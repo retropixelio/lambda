@@ -305,7 +305,7 @@ request = {
     "body": "{\r\n    \"userid\":\"andres64372@hotmail.com\",\r\n    \"password\":\"medellin1998\"\r\n}",
 }
 
-from function import lambda_handler
+from lambda_function import lambda_handler
 
 response = lambda_handler(request, None)
 print(response)
