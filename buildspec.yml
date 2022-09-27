@@ -12,7 +12,7 @@ phases:
       - cd package
       - zip -r ../deployment_package.zip .
       - cd ..
-      - zip -g deployment_package.zip lambda_function.py use_cases repos conf service-account.json
+      - zip -r deployment_package.zip lambda_function.py service-account.json use_cases repos conf
   post_build:
     commands:
       - echo "Updating lambda Function..."
