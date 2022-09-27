@@ -1,6 +1,5 @@
 from pathlib import Path
 
-n = 400
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET = 'R1BhE53$yt76$RR1hB5YJM'
