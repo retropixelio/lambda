@@ -68,5 +68,5 @@ def lambda_handler(event, context):
         if method == 'POST':
             out = base64.b64decode(event).decode('utf-8')
             form = parse_qs(out)
-            return auth_post(template, body, query)
+            return auth_post(template, form, query)
     return response_object(event, 404)
