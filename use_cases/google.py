@@ -8,7 +8,7 @@ from repos.response import response_object
 SECRET = 'R1BhE53$yt76$RR1hB5YJM'
 
 def smarthome(headers, body):
-    token = headers.get('Authorization')[7:]
+    token = headers.get('authorization')[7:]
     try:
         user = jwt.decode(token, SECRET, algorithms=["HS256"])
         if user["type"] != "access":

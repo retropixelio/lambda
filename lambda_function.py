@@ -19,9 +19,7 @@ def lambda_handler(event, context):
     query = event['queryStringParameters']
     headers = event['headers']
     if path == '/default/RetroPixelApi/login':
-        response = login_post(body)
-        print(response)
-        return response
+        return login_post(body)
     if path == '/default/RetroPixelApi/refresh':
         return refresh_post(query)
     if path == '/default/RetroPixelApi/smarthome':

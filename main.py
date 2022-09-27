@@ -266,7 +266,7 @@
 
 # @app.route('/set')
 # def set():
-#     token = request.headers.get('Authorization')[7:]
+#     token = request.headers.get('authorization')[7:]
 #     user = jwt.decode(token, SECRET, algorithms=["HS256"])
 #     if not (user.get("token_type") == "access" or user.get("type") == "access"): 
 #         return 'Invalid token',401
