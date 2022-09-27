@@ -7,13 +7,13 @@ from conf import settings
 from repos.response import response_object, redirect
 
 def auth_get():
-    environment = Environment(loader=FileSystemLoader("templates/"))
+    environment = Environment(loader=FileSystemLoader(settings.BASE_DIR+"templates/"))
     template = environment.get_template('login.html')
     template = template.render(invalid='hidden')
     return response_object(template, 200, 'text/html')
 
 def auth_post(form, args):
-    environment = Environment(loader=FileSystemLoader("templates/"))
+    environment = Environment(loader=FileSystemLoader(settings.BASE_DIR+"templates/"))
     template = environment.get_template('login.html')
     user = form.get('userid')
     password = form.get('password')
