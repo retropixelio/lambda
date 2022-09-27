@@ -12,8 +12,8 @@ def auth_get(template):
     return response_object(template, 200, 'text/html')
 
 def auth_post(template, form, args):
-    user = form.get('userid')
-    password = form.get('password')
+    user = form.get('userid')[0]
+    password = form.get('password')[0]
     url = args.get('redirect_uri')
     state = args.get('state')
     ref = db.reference(f'Users')

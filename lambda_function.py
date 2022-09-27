@@ -3,6 +3,8 @@ from firebase_admin import credentials
 import firebase_admin
 from jinja2 import Environment, FileSystemLoader
 import os
+import base64
+from urllib.parse import parse_qs
 
 from use_cases.login import login_post
 from use_cases.refresh import refresh_post
@@ -10,7 +12,7 @@ from use_cases.google import smarthome
 from use_cases.set import set_post
 from use_cases.devices import devices_get
 from use_cases.query import query_get
-from use_cases.auth import auth_get
+from use_cases.auth import auth_get, auth_post
 from use_cases.iot import connected
 from repos.response import response_object
 
@@ -22,7 +24,11 @@ firebase_admin.initialize_app(cred,{
 def lambda_handler(event, context):
     if event.get('eventType'):
         return connected(event)
-    body = json.loads(event['body']) if event.get('body') else {}
+    body = {}
+    if event.get('body'):
+        body = event['body']
+        if type(body) is dict:
+            body = json.loads(body)
     path = event['path']
     method = event['httpMethod']
     query = event['queryStringParameters']
@@ -59,4 +65,8 @@ def lambda_handler(event, context):
         template = environment.get_template('login.html')
         if method == 'GET':
             return auth_get(template)
+        if method == 'POST':
+            out = base64.b64decode(event).decode('utf-8')
+            form = parse_qs(out)
+            return auth_post(template, body, query)
     return response_object(event, 404)
