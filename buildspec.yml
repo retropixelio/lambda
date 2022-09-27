@@ -1,0 +1,17 @@
+version: 0.2
+phases:
+  install:
+    runtime-versions:
+      python: 3.8
+    commands:
+      - echo "Installing dependencies..."
+      - pip3 install -r requirements.txt
+  build:
+    commands:
+      - echo "Zipping deployment package..."
+      - zip -g deployment_package.zip function.py use_cases repos conf service-account.json env
+  post_build:
+    commands:
+      - echo "Updating lambda Function..."
+      - aws lambda update-function-code --function-name RetroPixelApi --zip-file fileb://deployment_package.zip
+      - echo "DONE!!"
