@@ -7,6 +7,7 @@ from conf import settings
 from repos.response import response_object
 
 def login_post(body):
+    print('--login')
     verify = {}
     user = body['userid'].replace(' ','')
     password = body['password']
@@ -15,6 +16,7 @@ def login_post(body):
     for key, val in snapshot.items():
         verify = val
         id = key
+    print('--verify')
     if not verify:
         return response_object({"status":False, "message":"User not found"},401)
     if not verify["active"]:
