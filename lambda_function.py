@@ -13,6 +13,7 @@ from use_cases.set import set_post
 from use_cases.devices import devices_get
 from use_cases.query import query_get
 from use_cases.auth import auth_get, auth_post
+from use_cases.token import token_post
 from use_cases.iot import connected
 from repos.response import response_object
 
@@ -22,6 +23,7 @@ firebase_admin.initialize_app(cred,{
 })
 
 def lambda_handler(event, context):
+    print(event)
     if event.get('eventType'):
         return connected(event)
     path = event['path']
@@ -59,6 +61,10 @@ def lambda_handler(event, context):
     if path == '/default/RetroPixelApi/query':
         if method == 'GET':
             return query_get(headers, query)
+    if path == '/default/RetroPixelApi/token':
+        if method == 'POST':
+            form = parse_qs(body)
+            return token_post(form)
     if path == '/default/RetroPixelApi/auth':
         environment = Environment(loader=FileSystemLoader(os.path.join(os.path.dirname(__file__), "templates"), encoding="utf-8"))
         template = environment.get_template('login.html')
