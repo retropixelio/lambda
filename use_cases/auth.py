@@ -7,13 +7,11 @@ import os
 from conf import settings
 from repos.response import response_object, redirect
 
-def auth_get(environment: Environment):
-    template = environment.get_template('login.html')
+def auth_get(template):
     template = template.render(invalid='hidden')
     return response_object(template, 200, 'text/html')
 
-def auth_post(environment: Environment, form, args):
-    template = environment.get_template('login.html')
+def auth_post(template, form, args):
     user = form.get('userid')
     password = form.get('password')
     url = args.get('redirect_uri')

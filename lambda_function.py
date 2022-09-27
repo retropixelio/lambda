@@ -19,8 +19,6 @@ firebase_admin.initialize_app(cred,{
     'databaseURL': 'https://retropixel-8f415-default-rtdb.firebaseio.com/'
 })
 
-environment = Environment(loader=FileSystemLoader(os.path.join(os.path.dirname(__file__), "templates"), encoding="utf-8"))
-
 def lambda_handler(event, context):
     if event.get('eventType'):
         return connected(event)
@@ -57,6 +55,8 @@ def lambda_handler(event, context):
         if method == 'GET':
             return query_get(headers, query)
     if path == '/default/RetroPixelApi/auth':
+        environment = Environment(loader=FileSystemLoader(os.path.join(os.path.dirname(__file__), "templates"), encoding="utf-8"))
+        template = environment.get_template('login.html')
         if method == 'GET':
-            return auth_get(environment)
+            return auth_get(template)
     return response_object(event, 404)
