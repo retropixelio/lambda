@@ -7,7 +7,6 @@ from conf import settings
 from repos.response import response_object
 
 def login_post(body):
-    print(body)
     verify = {}
     user = body['userid'].replace(' ','')
     password = body['password']
