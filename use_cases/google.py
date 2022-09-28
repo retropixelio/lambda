@@ -11,7 +11,7 @@ def smarthome(headers, body):
     token = headers.get('authorization')[7:]
     try:
         user = jwt.decode(token, SECRET, algorithms=["HS256"])
-        if user["type"] != "access":
+        if user["token_type"] != "access":
             return response_object({}, 401)
     except:
         return response_object({}, 401)
