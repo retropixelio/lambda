@@ -25,42 +25,6 @@
 #     ref.set({'active':True})
 #     return redirect("https://retropixel.tk", code=302)
 
-# @app.route('/token',methods=['POST'])
-# def token():
-#     data = urllib.parse.parse_qs(request.get_data().decode('utf-8'))
-#     grant_type = data['grant_type'][0]
-#     if grant_type == 'authorization_code':
-#         code = data['code'][0]
-#         try:
-#             user = jwt.decode(code, SECRET, algorithms=["HS256"])
-#         except:
-#             return 'Invalid token',401
-#         access = jwt.encode({"type":"access","user": user["user"],"exp":datetime.datetime.now() + datetime.timedelta(hours=24)}, SECRET, algorithm="HS256")
-#         refresh = jwt.encode({"type":"refresh","user": user["user"]}, SECRET, algorithm="HS256")
-#         payload = {
-#             "token_type": "Bearer",
-#             "access_token": access,
-#             "refresh_token": refresh,
-#             "expires_in": 24*3600
-#         }
-#         return jsonify(payload)
-#     elif grant_type == 'refresh_token':
-#         code = data['refresh_token'][0]
-#         try:
-#             user = jwt.decode(code, SECRET, algorithms=["HS256"])
-#         except:
-#             return 'Invalid token',401
-#         access = jwt.encode({"type":"access","user": user["user"],"exp":datetime.datetime.now() + datetime.timedelta(hours=24)}, SECRET, algorithm="HS256")
-#         payload = {
-#             "token_type": "Bearer",
-#             "access_token": access,
-#             "expires_in": 24*3600
-#         }
-#         return jsonify(payload)
-#     else: return 'Bad request',400
-
-
-
 request = {
     "version": "1.0",
     "resource": "/RetroPixelApi",

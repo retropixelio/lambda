@@ -1,7 +1,3 @@
-from pathlib import Path
-
-BASE_DIR = Path(__file__).resolve().parent.parent
-
-SECRET = 'R1BhE53$yt76$RR1hB5YJM'
+SECRET = '5h#_1=2o0u@3y0^+rm5tt3!12cy$q+5fpy2xx3=%a6j#dhj!=b'
 ACCESS_KEY_ID = 'AKIATTIA7Z53SQYXT5VA'
 ACCESS_SECRET_KEY = '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'
