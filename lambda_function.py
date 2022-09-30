@@ -54,7 +54,7 @@ def lambda_handler(event, context):
         return smarthome(headers, body)
     if path == '/default/RetroPixelApi/set':
         if method == 'POST':
-            return set_post(headers, query)
+            return set_post(headers, body)
     if path == '/default/RetroPixelApi/devices':
         if method == 'GET':
             return devices_get(headers)
