@@ -4,8 +4,8 @@ import datetime
 from conf import settings
 from repos.response import response_object
 
-def refresh_post(query):    
-    refresh = query['token']
+def refresh_post(body):    
+    refresh = body['token']
     token = jwt.decode(refresh, settings.SECRET, algorithms=["HS256"])
     if token["token_type"] != "refresh":
         return response_object({}, 400)

@@ -49,7 +49,7 @@ def lambda_handler(event, context):
             return login_post(body)
     if path == '/default/RetroPixelApi/refresh':
         if method == 'POST':
-            return refresh_post(query)
+            return refresh_post(body)
     if path == '/default/RetroPixelApi/smarthome':
         return smarthome(headers, body)
     if path == '/default/RetroPixelApi/set':
