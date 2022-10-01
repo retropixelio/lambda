@@ -12,8 +12,7 @@ def set_post(headers, devices):
     user = jwt.decode(token, settings.SECRET, algorithms=["HS256"])
     if user.get("token_type") == "access": 
         for device in devices:
-            print(device)
-            topic = device.get('topic')
+            topic = device.get('topi')
             payload = device.get('payload')
             id = topic.split('/')[0]
             mqtt.publish(topic,payload)
