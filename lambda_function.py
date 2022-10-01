@@ -23,7 +23,6 @@ firebase_admin.initialize_app(cred,{
 })
 
 def lambda_handler(event, context):
-    print(event)
     if event.get('eventType'):
         return connected(event)
     path = event['path']

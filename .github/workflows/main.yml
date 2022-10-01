@@ -1,0 +1,30 @@
+name: Build and Deploy
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python 3.8
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.8
+    - name: Install dependencies
+        run: pip install -r requirements.txt
+    - name: Test with pytest
+        run: pytest
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+    - run: pip install --target ./package -r requirements.txt
+    - run: cd package
+    - run: zip -r ../deployment_package.zip .
+    - run: cd ..
+    - run: zip -r deployment_package.zip lambda_function.py service-account.json use_cases repos conf templates
+    - run: aws lambda update-function-code --function-name RetroPixelApi --zip-file fileb://deployment_package.zip
