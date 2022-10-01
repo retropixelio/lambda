@@ -1,8 +1,6 @@
 from firebase_admin import db
 import jwt
 import bcrypt
-from jinja2 import Environment
-import os
 
 from conf import settings
 from repos.response import response_object, redirect
