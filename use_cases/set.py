@@ -10,8 +10,8 @@ mqtt = Mqtt()
 def set_post(headers, devices):
     token = headers.get('authorization')[7:]
     user = jwt.decode(token, settings.SECRET, algorithms=["HS256"])
-    for device in devices:
-        if user.get("token_type") == "access": 
+    if user.get("token_type") == "access": 
+        for device in devices:
             topic = device.get('topic')
             payload = device.get('payload')
             id = topic.split('/')[0]
@@ -29,4 +29,4 @@ def set_post(headers, devices):
             # if not Online:
             #     socketio.emit(id,{"branch":"Online","id":id,"state":False})
             #     socketio.emit(id,{"branch":"OnOff","id":id,"state":False})
-    return response_object({topic:payload},200)
+    return response_object({},200)
