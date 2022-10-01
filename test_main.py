@@ -79,3 +79,4 @@ class TestGlobal:
         )
         response = lambda_handler(refresh_object, None)
         assert response['statusCode'] == 200
+        
