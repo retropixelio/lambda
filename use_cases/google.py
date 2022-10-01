@@ -19,7 +19,7 @@ def smarthome(headers, body):
     id = body['requestId']
     for i in inputs:
         if i["intent"] == "action.devices.SYNC":
-            data = sync(user,i,id)
+            data = sync(user,id)
             return response_object(data, 200)
         if i["intent"] == "action.devices.QUERY":
             data = query(i,id)

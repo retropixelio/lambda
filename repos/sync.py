@@ -1,8 +1,9 @@
 from firebase_admin import db
 
-def sync(user,body,id):
+def sync(user,id):
     ref = db.reference(f'Users/{user}/devices')
     state = ref.get()
+    print(user)
     devices = []
     for i in state:
         devices.append({
