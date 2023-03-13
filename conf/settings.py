@@ -1,3 +1,3 @@
-SECRET = '5h#_1=2o0u@3y0^+rm5tt3!12cy$q+5fpy2xx3=%a6j#dhj!=b'
-ACCESS_KEY_ID = 'AKIATTIA7Z53XKUEPR6Q'
-ACCESS_SECRET_KEY = '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'
+import os
+
+SECRET = os.environ.get('SECRET')
