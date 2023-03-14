@@ -43,6 +43,9 @@ def lambda_handler(event, context):
             },
             'body': json.dumps({})
         }
+    if path == '/default/RetroPixelApi/ping':
+        if method == 'GET':
+            return response_object({}, 200)
     if path == '/default/RetroPixelApi/login':
         if method == 'POST':
             return login_post(body)
