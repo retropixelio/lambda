@@ -26,11 +26,7 @@ def sync(user,id):
             "roomHint": i["room"],
             "attributes": {
                 "colorModel": "rgb",
-                "colorTemperatureRange": {
-                    "temperatureMinK": 2000,
-                    "temperatureMaxK": 9000
-                },
-                "commandOnlyColorSetting": False
+                "commandOnlyColorSetting": True
             },
             "deviceInfo": {
                 "manufacturer": "RectroPixel c.o",
