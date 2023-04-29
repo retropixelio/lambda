@@ -1,3 +1,6 @@
 import os
+from pathlib import Path
 
-SECRET = os.environ.get('SECRET')
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+SECRET = os.environ.get('SECRET', 'fake-secret')

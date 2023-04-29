@@ -1,14 +1,12 @@
-from firebase_admin import db
-import jwt
-
-from conf import settings
+from repos.firebase import FirebaseRepository
 from repos.response import response_object
 
-def query_get(headers, args):
-    token = headers.get('authorization')[7:]
-    user = jwt.decode(token, settings.SECRET, algorithms=["HS256"])
-    if user.get("token_type") == "access":
-        device = args.get('device')
-        ref = db.reference(f'Devices/{device}')
-        return response_object(ref.get(), 200)
-    return response_object({}, 401)
+from request_objects.query import Query
+
+class QueryUseCase:
+    def __init__(self, firebase: FirebaseRepository):
+        self.__firebase = firebase
+
+    def execute(self, args: Query):
+        response = self.__firebase.get_device(args.device)
+        return response_object(response.to_dict(), 200)

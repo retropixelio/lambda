@@ -1,28 +1,48 @@
 import bcrypt
-import jwt
 import datetime
-from firebase_admin import db
 
-from conf import settings
 from repos.response import response_object
+from repos.firebase import FirebaseRepository
+from request_objects.login import Login
+from domain.authentication import TokenDecoded
 
-def login_post(body):
-    verify = {}
-    user = body['userid'].replace(' ','')
-    password = body['password']
-    ref = db.reference(f'Users')
-    snapshot = ref.order_by_child('email').equal_to(user).get()
-    for key, val in snapshot.items():
-        verify = val
-        id = key
-    if not verify:
-        return response_object({"status":False, "message":"User not found"},401)
-    if not verify["active"]:
-        return response_object({"status":False, "message":"User not active"},401)
-    verify = verify["password"]
-    if bcrypt.checkpw(password.encode('utf8'), verify.encode('utf8')):
-        code = jwt.encode({"token_type": "access","user": id,"exp":datetime.datetime.now() + datetime.timedelta(hours=24)}, settings.SECRET, algorithm="HS256")
-        refresh = jwt.encode({"token_type": "refresh","user": id}, settings.SECRET, algorithm="HS256")
-        return response_object({"status":True,"token":code,"refresh":refresh}, 200)
-    else:
-        return response_object({"status":False, "message":"Invalid password"}, 401)
+class LoginUseCase:
+    def __init__(self, firebase: FirebaseRepository):
+        self.__firebase = firebase
+
+    def execute(self, body: Login):
+        verify = {}
+        user = body.userid.replace(' ','')
+        password = body.password
+        id, verify = self.__firebase.get_user_by_email(user)
+        if not verify:
+            return response_object({
+                "status":False, 
+                "message":"User not found"
+            }, 401)
+        if not verify.active:
+            return response_object({
+                "status":False, 
+                "message":"User not active"
+            }, 401)
+        verify = verify.password
+        if bcrypt.checkpw(password.encode('utf8'), verify.encode('utf8')):
+            access = TokenDecoded(
+                token_type = "access",
+                user = id,
+                exp = datetime.datetime.now() + datetime.timedelta(hours=24)
+            )
+            refresh = TokenDecoded(
+                token_type = "refresh",
+                user = id
+            )
+            return response_object({
+                "status": True,
+                "token": access.encode().token,
+                "refresh": refresh.encode().token
+            }, 201)
+        else:
+            return response_object({
+                "status":False, 
+                "message":"Invalid password"
+            }, 401)
