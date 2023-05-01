@@ -5,13 +5,13 @@ from repos.mqtt import Mqtt
 
 from use_cases.google import SmarthomeUseCase
 
-from request_objects.set import Set
+from request_objects.smarthome import Smarthome
 
 class SmarthomeView(APIView):
     authentication_classes = [TokenAuthentication]
 
     def post(self):
-        request_obj = self.request.json()
+        request_obj = Smarthome.from_dict(self.request.json())
         firebase_repo = FirebaseRepository(self.user)
         mqtt_repo = Mqtt()
         use_case = SmarthomeUseCase(firebase_repo, mqtt_repo)

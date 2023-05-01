@@ -7,9 +7,8 @@ class Mqtt:
         )
         
     def publish(self,topic,payload):
-        response = self.client.publish(
+        self.client.publish(
             topic=topic,
             qos=1,
             payload=payload
         )
-        return response
