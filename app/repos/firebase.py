@@ -14,9 +14,7 @@ class FirebaseRepository:
         ref = db.reference(f'Users')
         snapshot = ref.order_by_child('email').equal_to(email).get()
         for key, val in snapshot.items():
-            verify = val
-            id = key
-        return id, User.from_dict(verify)
+            return key, User.from_dict(val)
     
     def get_user_devices(self):
         ref = db.reference(f'Users/{self.__user}/devices')
