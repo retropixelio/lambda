@@ -16,7 +16,7 @@ class TokenUseCase:
             try:
                 user = jwt.decode(code, settings.SECRET, algorithms=["HS256"])
             except:
-                return response_object({'message': 'Invalid token'}, 401)
+                return response_object({'message': 'Invalid token'}, 400)
             access = jwt.encode({"token_type":"access","user": user["user"], "exp":datetime.datetime.now() + datetime.timedelta(hours=24)}, settings.SECRET, algorithm="HS256")
             refresh = jwt.encode({"token_type":"refresh","user": user["user"]}, settings.SECRET, algorithm="HS256")
             payload = {
@@ -31,7 +31,7 @@ class TokenUseCase:
             try:
                 user = jwt.decode(code, settings.SECRET, algorithms=["HS256"])
             except:
-                return response_object({'message':'Invalid token'}, 401)
+                return response_object({'message':'Bad request'}, 400)
             access = jwt.encode({"token_type":"access","user": user["user"],"exp":datetime.datetime.now() + datetime.timedelta(hours=24)}, settings.SECRET, algorithm="HS256")
             payload = {
                 "token_type": "Bearer",
