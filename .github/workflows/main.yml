@@ -18,6 +18,9 @@ jobs:
         fileName: 'service-account.json'
         fileDir: './app/'
         encodedString: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
+    - name: Set secrets
+      run: |
+        echo 'SECRET=${{ secrets.SECRET }}' >> app/.env
     - name: Install dependencies
       run: |
         pip install -r requirements.txt
