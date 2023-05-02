@@ -47,3 +47,4 @@ def lambda_handler(event, _):
         response = request.execute()
         print(response)
         return response if response else response_object({}, status=404)
+    
