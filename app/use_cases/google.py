@@ -108,7 +108,7 @@ class SmarthomeUseCase:
                             device.nickname
                         ]
                     },
-                    "willReportState": True,
+                    "willReportState": False,
                     "roomHint": device.room,
                     "attributes": {
                         "colorModel": "rgb",
