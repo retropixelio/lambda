@@ -25,8 +25,9 @@ firebase_admin.initialize_app(
     }
 )
 
-def lambda_handler(event, _):
+def lambda_handler(event, context):
     print(json.dumps(event))
+    print(context)
     if event.get('eventType'):
         request = Connected.from_dict(event)
         response = ConnectedView()
