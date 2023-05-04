@@ -67,8 +67,14 @@ def request_object(path, method = 'GET', authorization = None, query = None, bod
         "body": json.dumps(body),
     }
 
+def get_user_by_email(id):
+    if id == email:
+        return user
+    else:
+        return (None, None)
+
 @patch("repos.mqtt.Mqtt.publish", return_value=None)
-@patch("repos.firebase.FirebaseRepository.get_user_by_email", return_value=user)
+@patch("repos.firebase.FirebaseRepository.get_user_by_email", side_effect=get_user_by_email)
 @patch("repos.firebase.FirebaseRepository.get_user_devices", return_value=devices)
 @patch("repos.firebase.FirebaseRepository.get_device", return_value=device)
 @patch("repos.firebase.FirebaseRepository.get_fisical", return_value=fisical)
@@ -109,6 +115,23 @@ class TestGlobal:
         )
         response = lambda_handler(login_object, None)
         assert response['statusCode'] == 301
+
+    def test_auth_post_email(self, *_):
+        form = {'userid': ['fake'], 'password': [password]}
+        body = base64.b64encode(urlencode(form, doseq=True).encode('utf-8')).decode('utf-8')
+        login_object = request_object(
+            '/default/RetroPixelApi/auth', 
+            method = 'POST',
+            query={
+                'client_id': 'andres6437', 
+                'redirect_uri': 'https://oauth-redirect.googleusercontent.com/r/retropixel-8f415', 
+                'response_type': 'code', 
+                'state': 'AEZvaVHDPEYOEoMZ5cbhFp2RJxaNZXHNaomAjuNx2h_wLbjqCFkQQFIQNvRRI1TTSnkQK9MRIoZ_vfH5ijm4oUXK1qR0nHcWRrBgw9HAIcrBP2O5oeE02LTI8uQtlkOHle1zZFGWn7fil0yKipP1GsSNPsXzmpU7onguAaO3lL-Fj3HPlTpAj23NKXBC7_yOV1jDMN10cUpkv8iXpmFXZRdovBV9ikYwTI8oXCbVntmwVEZjtqxrlv5dZd87a5Klx_bNa9TUehj66ujCQJnv9zVuZL-vARZZZXEFxEXiR099XtXlY7Sc-WOFI-8h22Mh5TqA7AjMbiGgAuDcHugGETCq9k-8asjN52IypfJLVSOC7oBfHIx3bA_tccG49nlZVNpg886NT1P-yAvVcmR9QR9Kz8NP_jt2_vgO21h31n2KyTNiWBn63IGN8_iG8FNmICkUBj3iVHgeYnE1SBsV3sf4deiqlzA2GzB5f-5J4vs1gKfPdqH71dpK4pd_sz6j2jXAMlVBSAA_J_fJRyfzkIbFac4y5zY3lKvjQy44GvneGpDCABvNHw9gbv3pIm28yJEanCsJzEUlzopo4jFvDCftneEawa-RR63cAPH9WtSs6-9aGU4UZFgltiP-fuT_hipK1Q_FdahcU8_zgIjCBSG0PyP5cILh39rf1tSPenscKan6mmdx6Ck'
+            }, 
+            body = body
+        )
+        response = lambda_handler(login_object, None)
+        assert response['statusCode'] == 200
 
     def test_auth_post_pwd(self, *_):
         form = {'userid': [email], 'password': ['fake']}

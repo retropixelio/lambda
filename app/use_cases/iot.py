@@ -28,8 +28,8 @@ class ConnectedUseCase:
                 data = self.__firebase.get_device(device)
                 OnOff = "true" if data.OnOff.on else "false"
                 Color = data.ColorSetting.color.spectrumRGB if data.ColorSetting.color.spectrumRGB else 16777215
-                self.__mqtt.publish(f"{device}/OnOff",OnOff)
-                self.__mqtt.publish(f"{device}/Color",str(Color))
+                #self.__mqtt.publish(f"{device}/OnOff",OnOff)
+                #self.__mqtt.publish(f"{device}/Color",str(Color))
             # if payload["topic"].split('/')[1] == "OnOff":
             #     id = payload['topic'].split('/')[0]
             #     socketio.emit(id,{"branch":"OnOff","id":id,"state":True if payload["payload"] == "true" else False})

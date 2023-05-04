@@ -1,5 +1,6 @@
 from firebase_admin import credentials
 import firebase_admin
+import json
 
 from conf import settings
 
@@ -25,6 +26,7 @@ firebase_admin.initialize_app(
 )
 
 def lambda_handler(event, _):
+    print(json.dumps(event))
     if event.get('eventType'):
         request = Connected.from_dict(event)
         response = ConnectedView()
@@ -41,8 +43,6 @@ def lambda_handler(event, _):
             '/default/RetroPixelApi/token': TokenView(request),
             '/default/RetroPixelApi/smarthome': SmarthomeView(request),
         }
-        print(f"endpoint {request.path}")
-        print(request)
         request = urls.get(request.path)
         response = request.execute()
         print(response)
