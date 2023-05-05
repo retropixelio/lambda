@@ -8,7 +8,7 @@ from repos.response import response_object
 
 from domain.event import Request, Connected
 
-from views.ping import Ping
+from views.ping import PingView
 from views.login import LoginView
 from views.token import TokenView
 from views.refresh import RefreshView
@@ -35,7 +35,7 @@ def lambda_handler(event, _):
     else:
         request = Request.from_dict(event)
         urls = {
-            '/default/RetroPixelApi/ping': Ping(request),
+            '/default/RetroPixelApi/ping': PingView(request),
             '/default/RetroPixelApi/login': LoginView(request),
             '/default/RetroPixelApi/refresh': RefreshView(request),
             '/default/RetroPixelApi/devices': DevicesView(request),
