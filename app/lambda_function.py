@@ -8,6 +8,7 @@ from repos.response import response_object
 
 from domain.event import Request, Connected
 
+from views.ping import Ping
 from views.login import LoginView
 from views.token import TokenView
 from views.refresh import RefreshView
@@ -25,8 +26,8 @@ firebase_admin.initialize_app(
     }
 )
 
-def lambda_handler(event, context):
-    print(event)
+def lambda_handler(event, _):
+    print(json.loads(event))
     if event.get('eventType'):
         request = Connected.from_dict(event)
         response = ConnectedView()
@@ -34,6 +35,7 @@ def lambda_handler(event, context):
     else:
         request = Request.from_dict(event)
         urls = {
+            '/default/RetroPixelApi/ping': Ping(request),
             '/default/RetroPixelApi/login': LoginView(request),
             '/default/RetroPixelApi/refresh': RefreshView(request),
             '/default/RetroPixelApi/devices': DevicesView(request),
