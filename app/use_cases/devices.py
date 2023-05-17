@@ -30,6 +30,7 @@ class DevicesUseCase:
                 device_states.update({
                     device.id:{
                         "name": device.nickname,
+                        "room": device.room,
                         "OnOff":OnOff,
                         "Online":Online,
                         "Color":int(Color)
