@@ -153,3 +153,21 @@
 # )
 
 # print(response.status_code)
+
+import os
+from firebase_admin import credentials
+import firebase_admin
+from firebase_admin import db
+
+from conf import settings
+firebase_admin.initialize_app(
+    credentials.Certificate(settings.BASE_DIR / "service-account.json"),
+    {
+        'databaseURL': 'http://localhost:5000/'
+    }
+)
+# 1//01tVp2OxQIl14CgYIARAAGAESNwF-L9IrKbBh0zerQY1v8K4Bd65q3x7FFx1Av34ami1hzbUyGxOggGRGUIqYfspAwCyieW-MlCQ
+
+ref = db.reference(f'Users')
+snapshot = ref.order_by_child('email').equal_to('andres64372@hotmail.com').get()
+

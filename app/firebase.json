@@ -1,0 +1,8 @@
+{
+  "emulators": {
+    "singleProjectMode": true,
+    "database": {
+      "port": 9000
+    }
+  }
+}

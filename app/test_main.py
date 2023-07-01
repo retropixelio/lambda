@@ -222,8 +222,10 @@ class TestGlobal:
             '/default/RetroPixelApi/set',
             method = 'POST', 
             body=[{
-                'topic': f"{self.device}/OnOff",
-                'payload': 'true'
+                'topic': self.device,
+                'payload': {
+                    'onoff': True
+                }
             }],
             authorization= f'Bearer {self.token}'
         )

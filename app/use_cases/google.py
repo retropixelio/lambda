@@ -1,3 +1,4 @@
+import json
 from request_objects.smarthome import Smarthome, Input
 from repos.firebase import FirebaseRepository
 from repos.mqtt import Mqtt
@@ -37,12 +38,25 @@ class SmarthomeUseCase:
                     payload["states"] = excecute.params
                     payload["states"]["online"] = True
                     if excecute.command == "action.devices.commands.OnOff":
-                        self.__mqtt.publish(f"{id}/OnOff", "true" if excecute.params["on"] else "false")
-                        self.__firebase.update_state(id, 'OnOff', {'on':excecute.params["on"]})
+                        self.__mqtt.publish(
+                            id,
+                            json.dumps({
+                                "onoff": excecute.params["on"]
+                            })
+                        )
                     if excecute.command == "action.devices.commands.ColorAbsolute":
-                        color = excecute.params['color']
-                        self.__mqtt.publish(f"{id}/Color", str(color))
-                        self.__firebase.update_state(id, 'Color', {'color':excecute.params["color"]})
+                        color = excecute.params['color']['spectrumRGB']
+                        rgb = (color // 256 // 256 % 256, color // 256 % 256, color % 256)
+                        self.__mqtt.publish(
+                            id,
+                            json.dumps({
+                                "color": {
+                                    "red": rgb[0],
+                                    "green": rgb[1],
+                                    "blue": rgb[2]
+                                }
+                            })
+                        )
                 device = self.__firebase.get_device(id)
                 if not device.Online.online: 
                     payload = {

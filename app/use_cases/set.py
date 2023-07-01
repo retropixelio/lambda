@@ -1,3 +1,4 @@
+import json
 from typing import List
 
 from repos.firebase import FirebaseRepository
@@ -12,24 +13,23 @@ class SetUseCase:
 
     def execute(self, devices: List[Set]):
         for device in devices:
-            topic = device.topic
-            payload = device.payload
-            id = topic.split('/')[0]
-            self.__mqtt.publish(topic,payload)
-            if topic.split('/')[1] == "OnOff":
-                #socketio.emit(id,{"branch":"OnOff","id":id,"state":True if payload == "true" else False})
-                self.__firebase.update_state(
-                    id, 
-                    "OnOff", 
-                    {'on': True if payload == "true" else False}
-                )
-            if topic.split('/')[1] == "Color":
-                #socketio.emit(id,{"branch":"Color","id":id,"state":int(payload)})
-                self.__firebase.update_state(
-                    id, 
-                    "ColorSetting", 
-                    {'color':{"spectrumRGB":int(payload)}}
-                )
+            id = device.id
+            state = device.state
+            self.__mqtt.publish(id, json.dumps(state))
+            # if topic.split('/')[1] == "OnOff":
+            #     #socketio.emit(id,{"branch":"OnOff","id":id,"state":True if payload == "true" else False})
+            #     self.__firebase.update_state(
+            #         id, 
+            #         "OnOff", 
+            #         {'on': True if payload == "true" else False}
+            #     )
+            # if topic.split('/')[1] == "Color":
+            #     #socketio.emit(id,{"branch":"Color","id":id,"state":int(payload)})
+            #     self.__firebase.update_state(
+            #         id, 
+            #         "ColorSetting", 
+            #         {'color':{"spectrumRGB":int(payload)}}
+            #     )
             # ref = db.reference(f'Devices/{id}')
             # Online = ref.get()
             # if not Online:
