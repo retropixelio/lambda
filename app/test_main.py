@@ -356,3 +356,11 @@ class TestGlobal:
             }
         }
         assert json.loads(response['body']) == result
+
+    def test_state(self, *_):
+        smarthome_object = {
+            'deviceId': self.device,
+            'onoff': True
+        }
+        response = lambda_handler(smarthome_object, None)
+        assert response == None

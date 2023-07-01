@@ -41,6 +41,7 @@ class SmarthomeUseCase:
                         self.__mqtt.publish(
                             id,
                             json.dumps({
+                                "deviceId": id,
                                 "onoff": excecute.params["on"]
                             })
                         )
@@ -50,6 +51,7 @@ class SmarthomeUseCase:
                         self.__mqtt.publish(
                             id,
                             json.dumps({
+                                "deviceId": id,
                                 "color": {
                                     "red": rgb[0],
                                     "green": rgb[1],

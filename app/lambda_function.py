@@ -16,6 +16,7 @@ from views.devices import DevicesView
 from views.set import SetView
 from views.query import QueryView
 from views.connected import ConnectedView
+from views.state import StateView
 from views.auth import AuthView
 from views.smarthome import SmarthomeView
 
@@ -32,7 +33,10 @@ def lambda_handler(event: dict, _):
         request = Connected.from_dict(event)
         response = ConnectedView()
         return response.get(request)
-    else:
+    if event.get('deviceId'):
+        response = StateView()
+        return response.get(event)
+    elif event.get('path'):
         request = Request.from_dict(event)
         urls = {
             '/default/RetroPixelApi/ping': PingView(request),
@@ -49,4 +53,5 @@ def lambda_handler(event: dict, _):
         response = request.execute()
         print(response)
         return response if response else response_object({}, status=404)
+    return response_object({}, status=404)
     

@@ -27,3 +27,15 @@ class ConnectedUseCase:
                 self.__mqtt.publish(f"{device}/OnOff",OnOff)
                 self.__mqtt.publish(f"{device}/Color",str(Color))
         return response_object({}, 200)
+    
+class StateUseCase:
+    def __init__(self, firebase: FirebaseRepository):
+        self.__firebase = firebase
+    
+    def execute(self, state: dict):
+        if state.get('onoff'):
+            self.__firebase.update_state(state['deviceId'], 'OnOff', {'on': state['onoff']})
+        if state.get('color'):
+            color =  state['color']
+            payload = (color['red'] << 16) + (color['green'] << 8) + color['blue']
+            self.__firebase.update_state(state['deviceId'], 'ColorSetting', {'color':{"spectrumRGB":int(payload)}})
