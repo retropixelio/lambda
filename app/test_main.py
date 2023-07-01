@@ -217,19 +217,21 @@ class TestGlobal:
         response = lambda_handler(refresh_object, None)
         assert response['statusCode'] == 200
 
-    def test_set(self, *_):
+    def test_set(self, *args):
         refresh_object = request_object(
             '/default/RetroPixelApi/set',
             method = 'POST', 
             body=[{
-                'topic': self.device,
-                'payload': {
+                'id': self.device,
+                'state': {
+                    'deviceid': self.device,
                     'onoff': True
                 }
             }],
             authorization= f'Bearer {self.token}'
         )
         response = lambda_handler(refresh_object, None)
+        args[-1].assert_called_with(self.device, json.dumps({'deviceid': self.device,'onoff': True}))
         assert response['statusCode'] == 201
 
     def test_smarthome_sync(self, *_):
