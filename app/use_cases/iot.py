@@ -33,9 +33,9 @@ class StateUseCase:
         self.__firebase = firebase
     
     def execute(self, state: dict):
-        if state.get('onoff'):
+        if 'onoff' in list(state.keys()):
             self.__firebase.update_state(state['deviceId'], 'OnOff', {'on': state['onoff']})
-        if state.get('color'):
+        if 'color' in list(state.keys()):
             color =  state['color']
             payload = (color['red'] << 16) + (color['green'] << 8) + color['blue']
             self.__firebase.update_state(state['deviceId'], 'ColorSetting', {'color':{"spectrumRGB":int(payload)}})
