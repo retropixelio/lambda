@@ -224,14 +224,14 @@ class TestGlobal:
             body=[{
                 'id': self.device,
                 'state': {
-                    'deviceid': self.device,
+                    'deviceId': self.device,
                     'onoff': True
                 }
             }],
             authorization= f'Bearer {self.token}'
         )
         response = lambda_handler(refresh_object, None)
-        args[-1].assert_called_with(self.device, json.dumps({'deviceid': self.device,'onoff': True}))
+        args[-1].assert_called_with(self.device, json.dumps({'deviceId': self.device,'onoff': True}))
         assert response['statusCode'] == 201
 
     def test_smarthome_sync(self, *_):
