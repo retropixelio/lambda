@@ -16,7 +16,7 @@ class SetUseCase:
             id = device.id
             state = device.state
             if not state.get('deviceId'):
-                raise response_object({'message': 'Missing deviceId'}, 400)
+                return response_object({'message': 'Missing deviceId'}, 400)
             self.__mqtt.publish(id, json.dumps(state))
             # if topic.split('/')[1] == "OnOff":
             #     #socketio.emit(id,{"branch":"OnOff","id":id,"state":True if payload == "true" else False})
