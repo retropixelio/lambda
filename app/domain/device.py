@@ -19,3 +19,4 @@ class Device(FromDictMixin):
     color: Color = None
     brightness: int = 0
     speed: int = 0
+    name: str = None

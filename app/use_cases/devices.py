@@ -24,6 +24,7 @@ class DevicesUseCase:
             if not data:
                 data = Device(
                     device_id = device.id,
+                    name = device.nickname,
                     online = False,
                     ip = "0.0.0.0",
                     onoff = False,
