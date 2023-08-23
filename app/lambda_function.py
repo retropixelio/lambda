@@ -1,7 +1,5 @@
 import json
 
-import logging
-
 from repos.response import response_object
 
 from domain.event import Request, Connected
@@ -20,7 +18,7 @@ from views.auth import AuthView
 from views.smarthome import SmarthomeView
 
 def lambda_handler(event: dict, _):
-    logging.info(json.dumps(event))
+    print(json.dumps(event))
     if event.get('eventType'):
         request = Connected.from_dict(event)
         response = ConnectedView()
@@ -44,7 +42,7 @@ def lambda_handler(event: dict, _):
         }
         request = urls.get(request.path)
         response = request.execute()
-        logging.info(response)
+        print(response)
         return response if response else response_object({}, status=404)
     return response_object({}, status=404)
     
