@@ -9,12 +9,12 @@ class ConnectedUseCase:
         self.__firebase = firebase
 
     def execute(self, payload: Connected):
-        device = self.__firebase.get_device(payload.clientId)
-        if payload.eventType == "disconnected":
+        device = self.__firebase.get_device(payload.client_id)
+        if payload.event_type == "disconnected":
             device.online = False
-        if payload.eventType == "connected":
+        if payload.event_type == "connected":
             device.online = True
-        self.__firebase.set_device(device)
+        self.__firebase.set_state(device)
         return response_object({}, 200)
     
 class StateUseCase:

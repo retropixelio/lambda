@@ -24,6 +24,6 @@ class Request(FromDictMixin):
     
 @dataclasses.dataclass
 class Connected(FromDictMixin):
-    eventType: str = None
-    clientId: str = None
+    event_type: str = None
+    client_id: str = None
     device: str = None
