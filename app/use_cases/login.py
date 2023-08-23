@@ -14,27 +14,27 @@ class LoginUseCase:
         verify = {}
         user = body.userid.replace(' ','')
         password = body.password
-        id, verify = self.__firebase.get_user_by_email(user)
-        if not verify:
+        user = self.__firebase.get_user_by_email(user)
+        if not user:
             return response_object({
                 "status":False, 
                 "message":"User not found"
             }, 401)
-        if not verify.active:
+        if not user.active:
             return response_object({
                 "status":False, 
                 "message":"User not active"
             }, 401)
-        verify = verify.password
+        verify = user.password
         if bcrypt.checkpw(password.encode('utf8'), verify.encode('utf8')):
             access = TokenDecoded(
                 token_type = "access",
-                user = id,
+                user = user.user_id,
                 exp = datetime.datetime.now() + datetime.timedelta(hours=24)
             )
             refresh = TokenDecoded(
                 token_type = "refresh",
-                user = id
+                user = user.user_id
             )
             return response_object({
                 "status": True,

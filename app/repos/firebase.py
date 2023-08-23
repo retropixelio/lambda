@@ -1,7 +1,15 @@
-from firebase_admin import db
+import boto3
+from boto3_type_annotations.dynamodb import ServiceResource
 
-from domain.user import User, UserDevice
+from conf import settings
+from domain.user import User
 from domain.device import Device
+
+dynamodb_client : ServiceResource = boto3.resource('dynamodb', 
+    region_name='us-east-1',
+    aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+    aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+)
 
 class FirebaseRepository:
     def __init__(self, user):
@@ -10,31 +18,56 @@ class FirebaseRepository:
     def get_user(self):
         return self.__user
     
+    def get_user_info(self):
+        users = dynamodb_client.Table('users')
+        response = users.get_item(
+            Key={'userId': self.get_user()}
+        )
+        item = response.get('Item')
+        return User.from_dict(item) if item else None
+    
     def get_user_by_email(self, email):
-        ref = db.reference(f'Users')
-        snapshot = ref.order_by_child('email').equal_to(email).get()
-        for key, val in snapshot.items():
-            return key, User.from_dict(val)
+        users = dynamodb_client.Table('users')
+        response = users.get_item(
+            Key={'userId': email}
+        )
+        item = response.get('Item')
+        return User.from_dict(item) if item else None
+        
+    def create_user(self, user: User):
+        users = dynamodb_client.Table('users')
+        response = users.put_item(Item=user.to_dict())
+        if response['ResponseMetadata']['HTTPStatusCode'] != 200:
+            raise 'Error'
     
-    def get_user_devices(self):
-        ref = db.reference(f'Users/{self.__user}/devices')
-        devices = ref.get()
-        return [UserDevice.from_dict(device) for device in devices]
+    def set_device(self, device: Device):
+        users = dynamodb_client.Table('users')
+        users.update_item(
+            Key={'userId': self.get_user()},
+            AttributeUpdates={
+                'devices': device.to_dict(),
+            },
+        )
     
-    def get_device(self, device):
-        ref = db.reference(f'Devices/{device}')
-        device = ref.get()
-        return Device.from_dict(device)
-    
-    def get_fisical(self, device):
-        ref = db.reference(f'Fisical/{device}')
-        device = ref.get()
-        return device
+    def get_device(self, device_id):
+        devices = dynamodb_client.Table('devices')
+        response = devices.get_item(
+            Key={'deviceId': device_id}
+        )
+        item = response.get('Item')
+        return Device.from_dict(item) if item else None
 
-    def set_state(self, device, state, value):
-        ref = db.reference(f'Devices/{device}')
-        ref.set({state: value})
+    def set_state(self, device: Device):
+        devices = dynamodb_client.Table('devices')
+        response = devices.put_item(Item=device.to_dict())
+        if response['ResponseMetadata']['HTTPStatusCode'] != 200:
+            raise 'Error'
 
     def update_state(self, device, state, value):
-        ref = db.reference(f'Devices/{device}/{state}')
-        ref.set(value)
+        devices = dynamodb_client.Table('devices')
+        devices.update_item(
+            Key={'deviceId': device},
+            AttributeUpdates={
+                state: value,
+            },
+        )

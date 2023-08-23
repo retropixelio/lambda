@@ -3,6 +3,7 @@ import typing
 import datetime
 import enum
 from inspect import isclass
+from decimal import Decimal
 
 from .name_conversion import camel_case_to_snake_case, snake_case_to_camel_case
 from .datetime_parsing import iso_from_datetime, parse_iso_datetime
@@ -22,7 +23,7 @@ class FromDictMixin:
         available_fields = {field.name: field for field in dataclasses.fields(self)}
         transformed_data = {}
         for field_name, field_type in available_fields.items():
-            navitaire_key = field_name
+            navitaire_key = snake_case_to_camel_case(field_name)
             attribute = getattr(self, field_name)
             if isinstance(attribute, list):
                 transformed_data[navitaire_key] = []
@@ -52,6 +53,8 @@ class FromDictMixin:
         available_fields = {field.name: field for field in dataclasses.fields(cls)}
         transformed_data = {}
         for key, value in data.items():
+            if type(value) is Decimal:
+                value = int(value)
             internal_key = camel_case_to_snake_case(key)
             if internal_key in available_fields.keys() and value:
                 matching_internal_field = available_fields[internal_key]

@@ -1,31 +1,20 @@
-from firebase_admin import db
-
-from repos.mqtt import Mqtt
 from repos.firebase import FirebaseRepository
 from repos.response import response_object
 
+from domain.device import Device
 from domain.event import Connected
 
 class ConnectedUseCase:
-    def __init__(self, firebase: FirebaseRepository, mqtt: Mqtt):
+    def __init__(self, firebase: FirebaseRepository):
         self.__firebase = firebase
-        self.__mqtt = mqtt
 
     def execute(self, payload: Connected):
-        if payload.eventType == "disconnected" and payload.clientId.startswith("LIGHT"):
-            device_list = self.__firebase.get_fisical(payload.clientId)
-            for device in device_list:
-                self.__firebase.update_state(device, 'Online', {'online': False})
-                # socketio.emit(device,{"branch":"Online","id":device,"state":False})
-        if payload.eventType == "connected" and payload.clientId.startswith("LIGHT"):
-            device_list = self.__firebase.get_fisical(payload.clientId)
-            for device in device_list:
-                self.__firebase.update_state(device, 'Online', {'online': True})
-                data = self.__firebase.get_device(device)
-                OnOff = "true" if data.OnOff.on else "false"
-                Color = data.ColorSetting.color.spectrumRGB if data.ColorSetting.color.spectrumRGB else 16777215
-                self.__mqtt.publish(f"{device}/OnOff",OnOff)
-                self.__mqtt.publish(f"{device}/Color",str(Color))
+        device = self.__firebase.get_device(payload.clientId)
+        if payload.eventType == "disconnected":
+            device.online = False
+        if payload.eventType == "connected":
+            device.online = True
+        self.__firebase.set_device(device)
         return response_object({}, 200)
     
 class StateUseCase:
@@ -33,9 +22,9 @@ class StateUseCase:
         self.__firebase = firebase
     
     def execute(self, state: dict):
-        if 'onoff' in list(state.keys()):
-            self.__firebase.update_state(state['deviceId'], 'OnOff', {'on': state['onoff']})
-        if 'color' in list(state.keys()):
-            color =  state['color']
-            payload = (color['red'] << 16) + (color['green'] << 8) + color['blue']
-            self.__firebase.update_state(state['deviceId'], 'ColorSetting', {'color':{"spectrumRGB":int(payload)}})
+        device = self.__firebase.get_device(state["deviceId"])
+        if device:
+            device = device.to_dict()
+            device.update(state)
+            self.__firebase.set_state(Device.from_dict(device))
+

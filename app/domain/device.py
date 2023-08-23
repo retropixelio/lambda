@@ -1,27 +1,21 @@
 import dataclasses
-from typing import List
 
 from utils.dataclass_classmethods import FromDictMixin
 
 @dataclasses.dataclass
-class SetOnOff(FromDictMixin):
-    on: bool = False
-
-@dataclasses.dataclass
-class SetOnline(FromDictMixin):
-    online: bool = False
-
-@dataclasses.dataclass
 class Color(FromDictMixin):
-    name: str = None
-    spectrumRGB: int = 0
-
-@dataclasses.dataclass
-class SetColor(FromDictMixin):
-    color: Color = False
+    s: int = 0
+    p: int = 0
+    t: int = 0
 
 @dataclasses.dataclass
 class Device(FromDictMixin):
-    OnOff: SetOnOff = None
-    ColorSetting: SetColor = None
-    Online: SetOnline = None
+    device_id: str = None
+    online: bool = False
+    ip: str = None
+    onoff: bool = False
+    ambilight: bool = False
+    chrome: int = 0
+    color: Color = None
+    brightness: int = 0
+    speed: int = 0

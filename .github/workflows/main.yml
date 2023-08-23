@@ -11,13 +11,6 @@ jobs:
       uses: actions/setup-python@v4
       with:
         python-version: 3.8
-    - name: Decode secure files
-      id: write_file
-      uses: timheuer/base64-to-file@v1.2
-      with:
-        fileName: 'service-account.json'
-        fileDir: './app/'
-        encodedString: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
     - name: Set secrets
       run: |
         echo 'SECRET=${{ secrets.SECRET }}' >> app/.env

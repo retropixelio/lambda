@@ -10,7 +10,7 @@ class QueryView(APIView):
     authentication_classes = [TokenAuthentication]
 
     def get(self):
-        request_obj = Query.from_dict(self.request.queryStringParameters)
+        request_obj = Query.from_dict(self.request.query_string_parameters)
         firebase_repo = FirebaseRepository(self.user)
         use_case = QueryUseCase(firebase_repo)
         response = use_case.execute(request_obj)

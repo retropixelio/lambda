@@ -13,7 +13,7 @@ class UserDevice(FromDictMixin):
 class User(FromDictMixin):
     active: bool = False
     devices: List[UserDevice] = dataclasses.field(default_factory=list)
-    email: str = None
-    name: str = None
-    last: str = None
+    user_id: str = None
+    first_name: str = None
+    last_name: str = None
     password: str = None

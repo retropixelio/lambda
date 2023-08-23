@@ -2,7 +2,7 @@ import re
 from typing import Dict
 
 def camel_case_to_snake_case(value):
-    return value.replace('-','_')
+    return re.sub(r"(?<=[a-z])(?=[A-Z])", "_", value).lower()
 
 def snake_case_to_camel_case(value):
     parts = value.split("_")

@@ -1,13 +1,17 @@
 import boto3
+from boto3_type_annotations.iot_data import Client
 
-class Mqtt:
-    def __init__(self):
-        self.client = boto3.client('iot-data', 
-            region_name='us-east-1'
-        )
-        
+from conf import settings
+
+mqtt_client : Client = boto3.client('iot-data', 
+    region_name='us-east-1',
+    aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+    aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+)
+
+class Mqtt:        
     def publish(self,topic,payload):
-        self.client.publish(
+        mqtt_client.publish(
             topic=topic,
             qos=1,
             payload=payload

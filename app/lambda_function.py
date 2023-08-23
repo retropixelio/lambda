@@ -1,8 +1,6 @@
-from firebase_admin import credentials
-import firebase_admin
 import json
 
-from conf import settings
+import logging
 
 from repos.response import response_object
 
@@ -10,6 +8,7 @@ from domain.event import Request, Connected
 
 from views.ping import PingView
 from views.login import LoginView
+from views.signup import SignupView
 from views.token import TokenView
 from views.refresh import RefreshView
 from views.devices import DevicesView
@@ -20,15 +19,8 @@ from views.state import StateView
 from views.auth import AuthView
 from views.smarthome import SmarthomeView
 
-firebase_admin.initialize_app(
-    credentials.Certificate(settings.BASE_DIR / "service-account.json"),
-    {
-        'databaseURL': 'https://retropixel-8f415-default-rtdb.firebaseio.com/'
-    }
-)
-
 def lambda_handler(event: dict, _):
-    print(json.dumps(event))
+    logging.info(json.dumps(event))
     if event.get('eventType'):
         request = Connected.from_dict(event)
         response = ConnectedView()
@@ -41,6 +33,7 @@ def lambda_handler(event: dict, _):
         urls = {
             '/default/RetroPixelApi/ping': PingView(request),
             '/default/RetroPixelApi/login': LoginView(request),
+            '/default/RetroPixelApi/signup': SignupView(request),
             '/default/RetroPixelApi/refresh': RefreshView(request),
             '/default/RetroPixelApi/devices': DevicesView(request),
             '/default/RetroPixelApi/set': SetView(request),
@@ -51,7 +44,7 @@ def lambda_handler(event: dict, _):
         }
         request = urls.get(request.path)
         response = request.execute()
-        print(response)
+        logging.info(response)
         return response if response else response_object({}, status=404)
     return response_object({}, status=404)
     

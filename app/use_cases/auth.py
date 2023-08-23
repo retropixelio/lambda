@@ -39,14 +39,14 @@ class PostAuthUseCase:
         password = form.get('password')[0]
         url = args.get('redirect_uri')
         state = args.get('state')
-        id, verify = self.__firebase.get_user_by_email(user)
-        if not verify: 
+        user = self.__firebase.get_user_by_email(user)
+        if not user: 
             template = template.render(state=state,url=url)
             return response_object(template, 200, 'text/html')
-        verify = verify.password
+        verify = user.password
         if bcrypt.checkpw(password.encode('utf-8'), verify.encode('utf-8')):
             code = TokenDecoded(
-                user = id,
+                user = user.user_id,
                 token_type = 'access',
             )
             return redirect(f'{url}?code={code.encode().token}&state={state}')

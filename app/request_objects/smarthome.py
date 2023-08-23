@@ -29,5 +29,5 @@ class Input(FromDictMixin):
 
 @dataclasses.dataclass
 class Smarthome(FromDictMixin):
-    requestId: str = None
+    request_id: str = None
     inputs: List[Input] = dataclasses.field(default_factory=list)

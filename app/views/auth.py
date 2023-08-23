@@ -15,6 +15,6 @@ class AuthView(APIView):
         use_case = PostAuthUseCase(firebase_repo)
         response = use_case.execute(
             self.request.body, 
-            self.request.queryStringParameters
+            self.request.query_string_parameters
         )
         return response

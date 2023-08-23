@@ -25,7 +25,7 @@ class APIView:
                 self.user = user
             else:
                 return response_object({}, 401)
-        if self.request.httpMethod == 'OPTIONS':
+        if self.request.http_method == 'OPTIONS':
             return{
                 'statusCode': 200,
                 'headers': {
@@ -34,7 +34,7 @@ class APIView:
                     'Access-Control-Allow-Methods': 'OPTIONS,POST,GET'
                 }
             }
-        if self.request.httpMethod.lower() in dir(self):
-            function = getattr(self, self.request.httpMethod.lower())
+        if self.request.http_method.lower() in dir(self):
+            function = getattr(self, self.request.http_method.lower())
             return function()
         return response_object({}, 405)

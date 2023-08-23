@@ -11,12 +11,9 @@ from lambda_function import lambda_handler
 from domain.user import User, UserDevice
 from domain.device import Device
 
-user_id = "164521328368ddfbf9eac4cc94"
-email = "andres64372@hotmail.com"
+user_id = "andres64372@hotmail.com"
 password = "medellin1998"
-device_id = "LIGHTlf8yRystroNXcuyXDX5pDw"
-
-fisical = [device_id]
+device_id = "1"
 
 class MockMqtt:
     def __init__(self):
@@ -26,18 +23,19 @@ class MockMqtt:
         pass
 
 device = Device.from_dict({
-    'OnOff': {
-        'on': True
+    "deviceId": "1",
+    "online": True,
+    "ip": "0.0.0.0",
+    "onoff": True,
+    "ambilight": True,
+    "chrome": 0,
+    "color": {
+        "p": 16777215,
+        "s": 16777215,
+        "t": 16777215,
     },
-    'ColorSetting': {
-        'color':{
-            'name': 'color',
-            'spectrumRGB': 0
-        }
-    },
-    'Online': {
-        'online': True
-    }
+    "brightness": 100,
+    "speed": 1000,
 })
 
 devices = [UserDevice(
@@ -46,12 +44,12 @@ devices = [UserDevice(
     room = 'room',
 )]
 
-user = user_id, User(
+user = User(
     active = True,
     devices = devices,
-    email = email,
-    name = 'Andres',
-    last = 'Herrera',
+    user_id = user_id,
+    first_name = 'Andres',
+    last_name = 'Herrera',
     password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8'),
 )
 
@@ -68,16 +66,16 @@ def request_object(path, method = 'GET', authorization = None, query = None, bod
     }
 
 def get_user_by_email(id):
-    if id == email:
+    if id == user_id:
         return user
     else:
-        return (None, None)
+        return None
 
 @patch("repos.mqtt.Mqtt.publish", return_value=None)
 @patch("repos.firebase.FirebaseRepository.get_user_by_email", side_effect=get_user_by_email)
-@patch("repos.firebase.FirebaseRepository.get_user_devices", return_value=devices)
+@patch("repos.firebase.FirebaseRepository.get_user_info", return_value=user)
+@patch("repos.firebase.FirebaseRepository.set_device", return_value=None)
 @patch("repos.firebase.FirebaseRepository.get_device", return_value=device)
-@patch("repos.firebase.FirebaseRepository.get_fisical", return_value=fisical)
 @patch("repos.firebase.FirebaseRepository.set_state", return_value=None)
 @patch("repos.firebase.FirebaseRepository.update_state", return_value=None)
 class TestGlobal:
@@ -100,7 +98,7 @@ class TestGlobal:
         assert response['statusCode'] == 200
 
     def test_auth_post(self, *_):
-        form = {'userid': [email], 'password': [password]}
+        form = {'userid': [user_id], 'password': [password]}
         body = base64.b64encode(urlencode(form, doseq=True).encode('utf-8')).decode('utf-8')
         login_object = request_object(
             '/default/RetroPixelApi/auth', 
@@ -134,7 +132,7 @@ class TestGlobal:
         assert response['statusCode'] == 200
 
     def test_auth_post_pwd(self, *_):
-        form = {'userid': [email], 'password': ['fake']}
+        form = {'userid': [user_id], 'password': ['fake']}
         body = base64.b64encode(urlencode(form, doseq=True).encode('utf-8')).decode('utf-8')
         login_object = request_object(
             '/default/RetroPixelApi/auth', 

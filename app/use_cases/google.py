@@ -11,7 +11,7 @@ class SmarthomeUseCase:
 
     def execute(self, body: Smarthome):
         inputs = body.inputs
-        id = body.requestId
+        id = body.request_id
         for input in inputs:
             if input.intent == "action.devices.SYNC":
                 data = self.__sync(id)
@@ -20,10 +20,10 @@ class SmarthomeUseCase:
                 data = self.__query(input, id)
                 return response_object(data, 200)
             if input.intent == "action.devices.EXECUTE":
-                data = self.__excecute(input, id)
+                data = self.__execute(input, id)
                 return response_object(data, 200)
             
-    def __excecute(self, body: Input, req_id):
+    def __execute(self, body: Input, req_id):
         commands = body.payload.commands
         payloads = []
         for command in commands:
@@ -55,16 +55,17 @@ class SmarthomeUseCase:
                                 "color": {
                                     "red": rgb[0],
                                     "green": rgb[1],
-                                    "blue": rgb[2]
+                                    "blue": rgb[2],
+                                    "type": 0,
                                 }
                             })
                         )
                 device = self.__firebase.get_device(id)
-                if not device.Online.online: 
+                if not device.online: 
                     payload = {
                         "ids": [id],
                         "status" : "OFFLINE",
-                        "on":False
+                        "on": False
                     }
                 payloads.append(payload)
         response = {
@@ -80,14 +81,16 @@ class SmarthomeUseCase:
         for device in body.payload.devices:
             id = device.id
             data = self.__firebase.get_device(id)
-            OnOff = data.OnOff.on
-            Online = data.Online.online
-            Color = data.ColorSetting.color
+            OnOff = data.onoff
+            Online = data.online
+            Color = data.color.p
             if Online:
                 payload[id] = {
                     "on": OnOff,
                     "online": True,
-                    "color": Color.to_dict(),
+                    "color": {
+                        "spectrumRGB": Color
+                    },
                     "status": "SUCCESS"
                 }
             else: 
@@ -136,6 +139,6 @@ class SmarthomeUseCase:
                         "hwVersion": "1.0",
                         "swVersion": "1.0"
                     }
-                } for device in self.__firebase.get_user_devices()]
+                } for device in self.__firebase.get_user_info().devices]
             }
         }

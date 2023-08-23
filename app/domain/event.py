@@ -13,10 +13,10 @@ class Headers(FromDictMixin):
 class Request(FromDictMixin):
     resource: str = None
     path: str = None
-    httpMethod: str = None
+    http_method: str = None
     headers: Headers = None
-    queryStringParameters: Dict[str, str] = dataclasses.field(default_factory=dict)
-    multiValueQueryStringParameters: Dict[str, str] = dataclasses.field(default_factory=dict)
+    query_string_parameters: Dict[str, str] = dataclasses.field(default_factory=dict)
+    multi_value_query_string_parameters: Dict[str, str] = dataclasses.field(default_factory=dict)
     body: str = None
 
     def json(self):
