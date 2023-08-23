@@ -1,14 +1,12 @@
 import boto3
 from boto3_type_annotations.dynamodb import ServiceResource
 
-from conf import settings
 from domain.user import User
 from domain.device import Device
 
-dynamodb_client : ServiceResource = boto3.resource('dynamodb', 
+dynamodb_client : ServiceResource = boto3.resource(
+    'dynamodb', 
     region_name='us-east-1',
-    aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
-    aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
 )
 
 class FirebaseRepository:
