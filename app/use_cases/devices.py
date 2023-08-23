@@ -39,6 +39,8 @@ class DevicesUseCase:
                     speed = 1000,
                 )
                 self.__firebase.set_state(data)
+            else:
+                data.name = device.nickname
             device_states.update({
                 device.id: data.to_dict(),
             })
