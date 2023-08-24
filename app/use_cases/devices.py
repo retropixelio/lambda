@@ -3,6 +3,7 @@ from domain.user import UserDevice
 from domain.device import Device, Color
 
 from repos.firebase import FirebaseRepository
+from repos.homegraph import HomeGraphRepository
 from repos.response import response_object
 
 class DevicesUseCase:
@@ -24,6 +25,7 @@ class DevicesUseCase:
             if not data:
                 data = Device(
                     device_id = device.id,
+                    users= [user.user_id],
                     name = device.nickname,
                     online = False,
                     ip = "0.0.0.0",
@@ -50,8 +52,9 @@ class DevicesUseCase:
         }, 200)
     
 class AddDeviceUseCase:
-    def __init__(self, firebase: FirebaseRepository):
+    def __init__(self, firebase: FirebaseRepository, homegraph: HomeGraphRepository):
         self.__firebase = firebase
+        self.__homegraph = homegraph
     
     def execute(self, device: DeviceRequest):
         user = self.__firebase.get_user_info()
@@ -61,4 +64,5 @@ class AddDeviceUseCase:
             room = device.room
         ))
         self.__firebase.create_user(user)
+        self.__homegraph.request_sync()
         return response_object({}, 201)

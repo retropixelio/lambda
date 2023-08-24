@@ -4,10 +4,7 @@ from boto3_type_annotations.dynamodb import ServiceResource
 from domain.user import User
 from domain.device import Device
 
-dynamodb_client : ServiceResource = boto3.resource(
-    'dynamodb', 
-    region_name='us-east-1',
-)
+dynamodb_client : ServiceResource = boto3.resource('dynamodb')
 
 class FirebaseRepository:
     def __init__(self, user):

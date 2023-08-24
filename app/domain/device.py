@@ -1,4 +1,5 @@
 import dataclasses
+from typing import List
 
 from utils.dataclass_classmethods import FromDictMixin
 
@@ -11,6 +12,7 @@ class Color(FromDictMixin):
 @dataclasses.dataclass
 class Device(FromDictMixin):
     device_id: str = None
+    users: List[str] = dataclasses.field(default_factory=list)
     online: bool = False
     ip: str = None
     onoff: bool = False

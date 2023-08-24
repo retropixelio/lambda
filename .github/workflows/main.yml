@@ -14,6 +14,7 @@ jobs:
     - name: Set secrets
       run: |
         echo 'SECRET=${{ secrets.SECRET }}' >> app/.env
+        echo 'PRIVATE_KEY=${{ secrets.PRIVATE_KEY }}' >> app/.env
     - name: Install dependencies
       run: |
         pip install -r requirements.txt
