@@ -43,7 +43,7 @@ class HomeGraphRepository:
         )
         if not response.ok:
             message = response.json()
-            raise message["error"]["message"]
+            raise Exception(message["error"]["message"])
         
     def report_state(self, user_id, device: Device):
         response = requests.post(
@@ -71,4 +71,4 @@ class HomeGraphRepository:
         )
         if not response.ok:
             message = response.json()
-            raise message["error"]["message"]
+            raise Exception(message["error"]["message"])
