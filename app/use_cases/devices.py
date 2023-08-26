@@ -64,5 +64,5 @@ class AddDeviceUseCase:
             room = device.room
         ))
         self.__firebase.create_user(user)
-        self.__homegraph.request_sync()
+        self.__homegraph.request_sync(user.user_id)
         return response_object({}, 201)
