@@ -31,9 +31,9 @@ class StateUseCase:
             color = state['color']['red']*256*256 + state['color']['green']*256 + state['color']['blue']
             if state['color']['type'] == 0:
                 state['color'] = {'p': color}
-            if state['color']['type'] == 1:
+            elif state['color']['type'] == 1:
                 state['color'] = {'s': color}
-            if state['color']['type'] == 2:
+            elif state['color']['type'] == 2:
                 state['color'] = {'t': color}
         device = self.__firebase.get_device(state["deviceId"])
         if device:
