@@ -58,11 +58,12 @@ class AddDeviceUseCase:
     
     def execute(self, device: DeviceRequest):
         user = self.__firebase.get_user_info()
-        user.devices.append(UserDevice(
-            id = device.id,
-            nickname = device.nickname,
-            room = device.room
-        ))
-        self.__firebase.create_user(user)
-        self.__homegraph.request_sync(user.user_id)
+        if device.id not in [user_device.id for user_device in user.devices]:
+            user.devices.append(UserDevice(
+                id = device.id,
+                nickname = device.nickname,
+                room = device.room
+            ))
+            self.__firebase.create_user(user)
+            self.__homegraph.request_sync(user.user_id)
         return response_object({}, 201)

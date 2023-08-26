@@ -27,6 +27,14 @@ class StateUseCase:
         self.__homegraph = homegraph
     
     def execute(self, state: dict):
+        if state.get('color'):
+            color = state['color']['red']*256*256 + state['color']['green']*256 + state['color']['blue']
+            if state['color']['type'] == 0:
+                state['color'] = {'p': color}
+            if state['color']['type'] == 1:
+                state['color'] = {'s': color}
+            if state['color']['type'] == 2:
+                state['color'] = {'t': color}
         device = self.__firebase.get_device(state["deviceId"])
         if device:
             device = device.to_dict()
