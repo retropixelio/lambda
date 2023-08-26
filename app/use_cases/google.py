@@ -1,4 +1,6 @@
 import json
+
+from domain.device import Device, Color
 from request_objects.smarthome import Smarthome, Input
 from repos.firebase import FirebaseRepository
 from repos.mqtt import Mqtt
@@ -117,6 +119,28 @@ class SmarthomeUseCase:
         return response
             
     def __sync(self, id):
+        user = self.__firebase.get_user_info()
+        for device in user.devices:
+            data = self.__firebase.get_device(device.id)
+            if not data:
+                data = Device(
+                    device_id = device.id,
+                    users= [user.user_id],
+                    name = device.nickname,
+                    online = False,
+                    ip = "0.0.0.0",
+                    onoff = False,
+                    ambilight = False,
+                    chrome = 0,
+                    color = Color(
+                        p = 16777215,
+                        s = 16777215,
+                        t = 16777215,
+                    ),
+                    brightness = 100,
+                    speed = 1000,
+                )
+                self.__firebase.set_state(data)
         return {
             "requestId": id,
             "payload": {
@@ -149,6 +173,6 @@ class SmarthomeUseCase:
                         "hwVersion": "1.0",
                         "swVersion": "1.0"
                     }
-                } for device in self.__firebase.get_user_info().devices]
+                } for device in user.devices]
             }
         }
