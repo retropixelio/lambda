@@ -60,6 +60,14 @@ class SmarthomeUseCase:
                                 }
                             })
                         )
+                    if excecute.command == "action.devices.commands.BrightnessAbsolute":
+                        self.__mqtt.publish(
+                            id,
+                            json.dumps({
+                                "deviceId": id,
+                                "brightness": excecute.params["brightness"]
+                            })
+                        )
                 device = self.__firebase.get_device(id)
                 if not device.online: 
                     payload = {
@@ -81,16 +89,18 @@ class SmarthomeUseCase:
         for device in body.payload.devices:
             id = device.id
             data = self.__firebase.get_device(id)
-            OnOff = data.onoff
-            Online = data.online
-            Color = data.color.p
-            if Online:
+            onoff = data.onoff
+            online = data.online
+            color = data.color.p
+            brightness = data.brightness
+            if online:
                 payload[id] = {
-                    "on": OnOff,
+                    "on": onoff,
                     "online": True,
                     "color": {
-                        "spectrumRGB": Color
+                        "spectrumRGB": color
                     },
+                    "brightness": brightness,
                     "status": "SUCCESS"
                 }
             else: 
@@ -116,7 +126,8 @@ class SmarthomeUseCase:
                     "type": "action.devices.types.LIGHT",
                     "traits": [
                         "action.devices.traits.OnOff",
-                        "action.devices.traits.ColorSetting"
+                        "action.devices.traits.ColorSetting",
+                        "action.devices.traits.Brightness"
                     ],
                     "name": {
                         "defaultNames": [
@@ -131,7 +142,6 @@ class SmarthomeUseCase:
                     "roomHint": device.room,
                     "attributes": {
                         "colorModel": "rgb",
-                        "commandOnlyColorSetting": True
                     },
                     "deviceInfo": {
                         "manufacturer": "RectroPixel C.O",
