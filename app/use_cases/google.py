@@ -67,7 +67,7 @@ class SmarthomeUseCase:
                             id,
                             json.dumps({
                                 "deviceId": id,
-                                "brightness": excecute.params["brightness"] * 255 / 100
+                                "brightness": int(excecute.params["brightness"] * 255 / 100)
                             })
                         )
                 device = self.__firebase.get_device(id)
