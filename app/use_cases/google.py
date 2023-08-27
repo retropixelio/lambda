@@ -89,24 +89,19 @@ class SmarthomeUseCase:
     def __query(self, body: Input, req_id):
         payload = {}
         for device in body.payload.devices:
-            id = device.id
-            data = self.__firebase.get_device(id)
-            onoff = data.onoff
-            online = data.online
-            color = data.color.p
-            brightness = data.brightness
-            if online:
-                payload[id] = {
-                    "on": onoff,
+            data = self.__firebase.get_device(device.id)
+            if data.online:
+                payload[device.id] = {
+                    "on": data.onoff,
                     "online": True,
                     "color": {
-                        "spectrumRGB": color
+                        "spectrumRGB": data.color.p
                     },
-                    "brightness": brightness,
+                    "brightness": int(data.brightness),
                     "status": "SUCCESS"
                 }
             else: 
-                payload[id] = {
+                payload[device.id] = {
                     "status": "OFFLINE",
                     "on": False
                 }
