@@ -56,6 +56,7 @@ class HomeGraphRepository:
                             device.device_id:{
                                 "on": device.onoff,
                                 "online": device.online,
+                                "brightness": device.brightness,
                                 "color": {
                                     "spectrumRGB": device.color.p
                                 }
