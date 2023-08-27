@@ -45,4 +45,3 @@ def lambda_handler(event: dict, _):
         print(response)
         return response if response else response_object({}, status=404)
     return response_object({}, status=404)
-    

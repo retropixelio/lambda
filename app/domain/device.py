@@ -5,8 +5,8 @@ from utils.dataclass_classmethods import FromDictMixin
 
 @dataclasses.dataclass
 class Color(FromDictMixin):
-    s: int = 0
     p: int = 0
+    s: int = 0
     t: int = 0
 
 @dataclasses.dataclass

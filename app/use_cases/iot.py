@@ -30,7 +30,7 @@ class StateUseCase:
         device = self.__firebase.get_device(state["deviceId"])
         if device:
             device = device.to_dict()
-            if state.get('color') and state['color'].get('type'):
+            if 'type' in state.get('color', {}).keys():
                 color = state['color']['red']*256*256 + state['color']['green']*256 + state['color']['blue']
                 if state['color']['type'] == 0:
                     device['color']['p'] = color
