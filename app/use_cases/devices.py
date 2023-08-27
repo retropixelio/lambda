@@ -39,10 +39,12 @@ class DevicesUseCase:
                     ),
                     brightness = 100,
                     speed = 1000,
+                    room = device.room
                 )
                 self.__firebase.set_state(data)
             else:
                 data.name = device.nickname
+                data.room = device.room
             device_states.update({
                 device.id: data.to_dict(),
             })
@@ -66,4 +68,29 @@ class AddDeviceUseCase:
             ))
             self.__firebase.create_user(user)
             self.__homegraph.request_sync(user.user_id)
+        return response_object({}, 201)
+    
+class DeleteDeviceUseCase:
+    def __init__(self, firebase: FirebaseRepository, homegraph: HomeGraphRepository):
+        self.__firebase = firebase
+        self.__homegraph = homegraph
+    
+    def execute(self, request: DeviceRequest):
+        user = self.__firebase.get_user_info()
+        user.devices = [
+            user_device 
+            for user_device in user.devices 
+            if user_device != request.id
+        ]
+        self.__firebase.create_user(user)
+        device = self.__firebase.get_device(request.id)
+        if device:
+            device.users = [
+                user
+                for device_user in device.users
+                if device_user != user.user_id
+            ]
+            self.__firebase.set_state(device)
+        
+        self.__homegraph.request_sync(user.user_id)
         return response_object({}, 201)

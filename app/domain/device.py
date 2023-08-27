@@ -22,3 +22,4 @@ class Device(FromDictMixin):
     brightness: int = 0
     speed: int = 0
     name: str = None
+    room: str = None

@@ -5,7 +5,7 @@ from request_objects.device import Device
 from repos.firebase import FirebaseRepository
 from repos.homegraph import HomeGraphRepository
 
-from use_cases.devices import DevicesUseCase, AddDeviceUseCase
+from use_cases.devices import DevicesUseCase, AddDeviceUseCase, DeleteDeviceUseCase
 
 class DevicesView(APIView):
     authentication_classes = [TokenAuthentication]
@@ -21,5 +21,13 @@ class DevicesView(APIView):
         firebase_repo = FirebaseRepository(self.user)
         homegraph_repo = HomeGraphRepository()
         use_case = AddDeviceUseCase(firebase_repo, homegraph_repo)
+        response = use_case.execute(request_object)
+        return response
+    
+    def delete(self):
+        request_object = Device.from_dict(self.request.json())
+        firebase_repo = FirebaseRepository(self.user)
+        homegraph_repo = HomeGraphRepository()
+        use_case = DeleteDeviceUseCase(firebase_repo, homegraph_repo)
         response = use_case.execute(request_object)
         return response
