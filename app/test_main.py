@@ -77,7 +77,10 @@ def get_user_by_email(id):
 @patch("repos.firebase.FirebaseRepository.set_device", return_value=None)
 @patch("repos.firebase.FirebaseRepository.get_device", return_value=device)
 @patch("repos.firebase.FirebaseRepository.set_state", return_value=None)
+@patch("repos.firebase.FirebaseRepository.create_user", return_value=None)
 @patch("repos.firebase.FirebaseRepository.update_state", return_value=None)
+@patch("repos.homegraph.HomeGraphRepository.request_sync", return_value=None)
+@patch("repos.homegraph.HomeGraphRepository.report_state", return_value=None)
 class TestGlobal:
     token = jwt.encode({"token_type": "access","user": user_id,"exp":datetime.datetime.now() + datetime.timedelta(hours=24)}, settings.SECRET, algorithm="HS256")
     refresh = jwt.encode({"token_type": "refresh","user": user_id}, settings.SECRET, algorithm="HS256")
