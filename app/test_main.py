@@ -206,6 +206,20 @@ class TestGlobal:
         response = lambda_handler(refresh_object, None)
         assert response['statusCode'] == 200
 
+    def test_devices(self, *_):
+        refresh_object = request_object(
+            '/default/RetroPixelApi/devices',
+            method = 'POST',
+            body = {
+                'id': 'new_id',
+                'nickname': 'new_nickname',
+                'roon': 'new_roon',
+            }, 
+            authorization= f'Bearer {self.token}'
+        )
+        response = lambda_handler(refresh_object, None)
+        assert response['statusCode'] == 201
+
     def test_query(self, *_):
         refresh_object = request_object(
             '/default/RetroPixelApi/query',
