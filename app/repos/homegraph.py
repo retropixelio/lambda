@@ -28,7 +28,12 @@ class HomeGraphRepository:
                 "assertion": code
             }
         )
-        self.__token = response.json()['access_token']
+        data = response.json()
+        if response.ok:
+            self.__token = data['access_token']
+        else:
+            print(data)
+            raise Exception("Homegraph not authenticated")
 
     def request_sync(self, user_id):
         response = requests.post(
