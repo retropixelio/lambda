@@ -21,21 +21,23 @@ code = jwt.encode(credentials, secret.encode("utf-8"), 'RS256')
 
 class HomeGraphRepository:
     def __init__(self):
-        response = requests.post(
-            'https://oauth2.googleapis.com/token',
-            json={
-                "grant_type": "urn:ietf:params:oauth:grant-type:jwt-bearer",
-                "assertion": code
-            }
-        )
-        data = response.json()
-        if response.ok:
-            self.__token = data['access_token']
-        else:
-            print(data)
-            raise Exception("Homegraph not authenticated")
+        pass
+        # response = requests.post(
+        #     'https://oauth2.googleapis.com/token',
+        #     json={
+        #         "grant_type": "urn:ietf:params:oauth:grant-type:jwt-bearer",
+        #         "assertion": code
+        #     }
+        # )
+        # data = response.json()
+        # if response.ok:
+        #     self.__token = data['access_token']
+        # else:
+        #     print(data)
+        #     raise Exception("Homegraph not authenticated")
 
     def request_sync(self, user_id):
+        return
         response = requests.post(
             'https://homegraph.googleapis.com/v1/devices:requestSync',
             json={
@@ -51,6 +53,7 @@ class HomeGraphRepository:
             raise Exception(message["error"]["message"])
         
     def report_state(self, user_id, device: Device):
+        return
         response = requests.post(
             'https://homegraph.googleapis.com/v1/devices:reportStateAndNotification',
             json={
