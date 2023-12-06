@@ -25,7 +25,7 @@ class DevicesUseCase:
             data.room = device.room
             device_list.append(data.id)
             device_states.update({
-                device.id: data.to_dict(),
+                data.id: data.to_dict(),
             })
         return response_object({
             'list': device_list,
