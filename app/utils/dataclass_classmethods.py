@@ -56,7 +56,7 @@ class FromDictMixin:
             if type(value) is Decimal:
                 value = int(value)
             internal_key = camel_case_to_snake_case(key)
-            if internal_key in available_fields.keys() and value:
+            if internal_key in available_fields.keys() and value is not None:
                 matching_internal_field = available_fields[internal_key]
                 if matching_internal_field.type in built_in_types:
                     internal_value = value
@@ -89,6 +89,6 @@ class FromDictMixin:
                         internal_value = value
                 else:
                     internal_value = None
-                if internal_value:
+                if internal_value is not None:
                     transformed_data[internal_key] = internal_value
         return cls(**transformed_data)
