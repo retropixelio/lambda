@@ -23,3 +23,27 @@ class Device(FromDictMixin):
     speed: int = 0
     name: str = None
     room: str = None
+
+@dataclasses.dataclass
+class ColorState(FromDictMixin):
+    p: int = None
+    s: int = None
+    t: int = None
+    red: int = None
+    green: int = None
+    blue: int = None
+    type: int = None
+
+@dataclasses.dataclass
+class DeviceState(FromDictMixin):
+    device_id: str = None
+    online: bool = None
+    ip: str = None
+    onoff: bool = None
+    ambilight: bool = None
+    chrome: int = None
+    color: ColorState = None
+    brightness: int = None
+    speed: int = None
+    name: str = None
+    room: str = None

@@ -2,7 +2,7 @@ from repos.firebase import FirebaseRepository
 from repos.homegraph import HomeGraphRepository
 from repos.response import response_object
 
-from domain.device import Device
+from domain.device import Device, DeviceState
 from domain.event import Connected
 
 class ConnectedUseCase:
@@ -26,22 +26,26 @@ class StateUseCase:
         self.__firebase = firebase
         self.__homegraph = homegraph
     
-    def execute(self, state: dict):
-        device = self.__firebase.get_device(state["deviceId"])
-        if device:
-            device = device.to_dict()
-            if 'type' in state.get('color', {}).keys():
-                color = state['color']['red']*256*256 + state['color']['green']*256 + state['color']['blue']
-                if state['color']['type'] == 0:
-                    device['color']['p'] = color
-                elif state['color']['type'] == 1:
-                    device['color']['s'] = color
-                elif state['color']['type'] == 2:
-                    device['color']['t'] = color
-            else:
-                device.update(state)
-            device = Device.from_dict(device)
-            self.__firebase.set_state(device)
-            for user in device.users:
-                self.__homegraph.report_state(user, device)
+    def execute(self, state: DeviceState):
+        device = Device()
+        device = self.__firebase.get_device(state.device_id)
+        if not device:
+            device = Device()
+        if state.device_id is not None: device.device_id=state.device_id
+        if state.online is not None: device.online=state.online
+        if state.ip is not None: device.ip=state.ip
+        if state.onoff is not None: device.onoff=state.onoff
+        if state.ambilight is not None: device.ambilight=state.ambilight
+        if state.chrome is not None: device.chrome=state.chrome
+        if state.color and state.color.p is not None: device.color.p=state.color.p
+        if state.color and state.color.s is not None: device.color.s=state.color.s
+        if state.color and state.color.t is not None: device.color.t=state.color.t
+        if state.color and state.color.type == 0: device.color.p = state.color.red*256*256 + state.color.green*256 + state.color.blue
+        if state.color and state.color.type == 1: device.color.s = state.color.red*256*256 + state.color.green*256 + state.color.blue
+        if state.color and state.color.type == 2: device.color.t = state.color.red*256*256 + state.color.green*256 + state.color.blue
+        if state.brightness is not None: device.brightness=state.brightness
+        if state.speed is not None: device.speed=state.speed
+        self.__firebase.set_state(device)
+        for user in device.users:
+            self.__homegraph.report_state(user, device)
 

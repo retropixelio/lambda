@@ -3,6 +3,7 @@ import json
 from repos.response import response_object
 
 from domain.event import Request, Connected
+from domain.device import DeviceState
 
 from views.ping import PingView
 from views.login import LoginView
@@ -24,8 +25,9 @@ def lambda_handler(event: dict, _):
         response = ConnectedView()
         return response.get(request)
     if event.get('deviceId'):
+        request = DeviceState.from_dict(event)
         response = StateView()
-        return response.get(event)
+        return response.get(request)
     elif event.get('path'):
         request = Request.from_dict(event)
         urls = {

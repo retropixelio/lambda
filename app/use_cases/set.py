@@ -12,8 +12,10 @@ class SetUseCase:
 
     def execute(self, devices: List[Set]):
         for device in devices:
-            id = device.id
-            state = device.state
-            state['deviceId'] = id
-            self.__mqtt.publish(id, json.dumps(state))
+            self.__mqtt.publish(
+                device.id, 
+                json.dumps(
+                    {key: value for key,value in device.state.to_dict().items() if value is not None}
+                )
+            )
         return response_object({}, 201)
