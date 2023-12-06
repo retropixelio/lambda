@@ -11,7 +11,6 @@ class SetUseCase:
         self.__mqtt = mqtt
 
     def execute(self, devices: List[Set]):
-        print(devices)
         for device in devices:
             self.__mqtt.publish(
                 device.id, 
