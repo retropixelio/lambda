@@ -26,6 +26,7 @@ def lambda_handler(event: dict, _):
         return response.get(request)
     if event.get('deviceId'):
         request = DeviceState.from_dict(event)
+        print(request)
         response = StateView()
         return response.get(request)
     elif event.get('path'):

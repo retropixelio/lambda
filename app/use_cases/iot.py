@@ -12,6 +12,8 @@ class ConnectedUseCase:
 
     def execute(self, payload: Connected):
         device = self.__firebase.get_device(payload.client_id)
+        if not device:
+            device = Device()
         if payload.event_type == "disconnected":
             device.online = False
         if payload.event_type == "connected":
@@ -27,7 +29,6 @@ class StateUseCase:
         self.__homegraph = homegraph
     
     def execute(self, state: DeviceState):
-        device = Device()
         device = self.__firebase.get_device(state.device_id)
         if not device:
             device = Device()

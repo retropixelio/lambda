@@ -57,7 +57,7 @@ class FirebaseRepository:
 
     def set_state(self, device: Device):
         devices = dynamodb_client.Table('devices')
-        response = devices.put_item(Item=device.to_dict())
+        response = devices.put_item(Item={key: value for key,value in device.to_dict().items() if value is not None})
         if response['ResponseMetadata']['HTTPStatusCode'] != 200:
             raise 'Error'
 
