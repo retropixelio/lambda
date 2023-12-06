@@ -32,8 +32,9 @@ class StateUseCase:
         self.__homegraph = homegraph
     
     def execute(self, state: DeviceState):
+        state.device_id = state.device_id[:20]
         device = self.__firebase.get_device(state.device_id)
-        if state.device_id is not None: device.device_id=state.device_id[:20]
+        if state.device_id is not None: device.device_id=state.device_id
         if state.online is not None: device.online=state.online
         if state.ip is not None: device.ip=state.ip
         if state.onoff is not None: device.onoff=state.onoff
