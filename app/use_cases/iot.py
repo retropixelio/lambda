@@ -14,6 +14,7 @@ class ConnectedUseCase:
         device = self.__firebase.get_device(payload.client_id)
         if not device:
             device = Device()
+            device.device_id = payload.client_id
         if payload.event_type == "disconnected":
             device.online = False
         if payload.event_type == "connected":
