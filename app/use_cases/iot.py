@@ -2,7 +2,7 @@ from repos.firebase import FirebaseRepository
 from repos.homegraph import HomeGraphRepository
 from repos.response import response_object
 
-from domain.device import Device, DeviceState
+from domain.device import Device, DeviceState, Color
 from domain.event import Connected
 
 class ConnectedUseCase:
@@ -32,7 +32,8 @@ class StateUseCase:
         device = self.__firebase.get_device(state.device_id)
         if not device:
             device = Device()
-        if state.device_id is not None: device.device_id=state.device_id
+            device.color = Color()
+        if state.device_id is not None: device.device_id=state.device_id[:20]
         if state.online is not None: device.online=state.online
         if state.ip is not None: device.ip=state.ip
         if state.onoff is not None: device.onoff=state.onoff
