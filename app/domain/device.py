@@ -11,6 +11,7 @@ class Color(FromDictMixin):
 
 @dataclasses.dataclass
 class Device(FromDictMixin):
+    id: str = None
     device_id: str = None
     users: List[str] = dataclasses.field(default_factory=list)
     online: bool = False

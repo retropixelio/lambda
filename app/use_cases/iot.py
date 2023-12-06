@@ -11,11 +11,12 @@ class ConnectedUseCase:
         self.__homegraph = homegraph
 
     def execute(self, payload: Connected):
-        payload.client_id = payload.client_id[:20]
+        payload.client_id = payload.client_id
         device = self.__firebase.get_device(payload.client_id)
         if not device:
             device = Device()
-            device.device_id = payload.client_id
+            device.id = payload.client_id
+            device.device_id = payload.client_id[:20]
             device.color = Color()
             device.brightness = 255 # ESP32 bug (delete this line)
         if payload.event_type == "disconnected":
@@ -33,10 +34,7 @@ class StateUseCase:
         self.__homegraph = homegraph
     
     def execute(self, state: DeviceState):
-        state.device_id = state.device_id[:20]
-        device = self.__firebase.get_device(state.device_id)
-        if state.device_id is not None: device.device_id=state.device_id
-        if state.online is not None: device.online=state.online
+        device = self.__firebase.get_device(state.device_id[:20])
         if state.ip is not None: device.ip=state.ip
         if state.onoff is not None: device.onoff=state.onoff
         if state.ambilight is not None: device.ambilight=state.ambilight

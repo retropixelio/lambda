@@ -20,31 +20,10 @@ class DevicesUseCase:
         device_list = []
         device_states = {}
         for device in user.devices:
-            device_list.append(device.id)
             data = self.__firebase.get_device(device.id)
-            if not data:
-                data = Device(
-                    device_id = device.id,
-                    users= [user.user_id],
-                    name = device.nickname,
-                    online = False,
-                    ip = "0.0.0.0",
-                    onoff = False,
-                    ambilight = False,
-                    chrome = 0,
-                    color = Color(
-                        p = 16777215,
-                        s = 16777215,
-                        t = 16777215,
-                    ),
-                    brightness = 100,
-                    speed = 1000,
-                    room = device.room
-                )
-                self.__firebase.set_state(data)
-            else:
-                data.name = device.nickname
-                data.room = device.room
+            data.name = device.nickname
+            data.room = device.room
+            device_list.append(data.id)
             device_states.update({
                 device.id: data.to_dict(),
             })
