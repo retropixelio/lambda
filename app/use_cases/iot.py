@@ -15,6 +15,7 @@ class ConnectedUseCase:
         if not device:
             device = Device()
             device.device_id = payload.client_id
+            device.color = Color()
         if payload.event_type == "disconnected":
             device.online = False
         if payload.event_type == "connected":
@@ -31,9 +32,6 @@ class StateUseCase:
     
     def execute(self, state: DeviceState):
         device = self.__firebase.get_device(state.device_id)
-        if not device:
-            device = Device()
-            device.color = Color()
         if state.device_id is not None: device.device_id=state.device_id[:20]
         if state.online is not None: device.online=state.online
         if state.ip is not None: device.ip=state.ip
