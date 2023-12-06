@@ -17,7 +17,7 @@ class ConnectedUseCase:
             device = Device()
             device.device_id = payload.client_id
             device.color = Color()
-            device.brightness = 255 # ESP32 bug
+            device.brightness = 255 # ESP32 bug (delete this line)
         if payload.event_type == "disconnected":
             device.online = False
         if payload.event_type == "connected":
