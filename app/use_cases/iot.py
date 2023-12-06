@@ -17,6 +17,7 @@ class ConnectedUseCase:
             device = Device()
             device.device_id = payload.client_id
             device.color = Color()
+            device.brightness = 255 # ESP32 bug
         if payload.event_type == "disconnected":
             device.online = False
         if payload.event_type == "connected":
@@ -46,7 +47,8 @@ class StateUseCase:
         if state.color and state.color.type == 0: device.color.p = state.color.red*256*256 + state.color.green*256 + state.color.blue
         if state.color and state.color.type == 1: device.color.s = state.color.red*256*256 + state.color.green*256 + state.color.blue
         if state.color and state.color.type == 2: device.color.t = state.color.red*256*256 + state.color.green*256 + state.color.blue
-        if state.brightness is not None: device.brightness=state.brightness
+        if state.brightness is not None and state.ip is None: 
+            device.brightness=state.brightness # ESP32 Bug (delete 'and state.ip is None')
         if state.speed is not None: device.speed=state.speed
         self.__firebase.set_state(device)
         for user in device.users:
