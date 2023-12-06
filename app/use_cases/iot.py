@@ -11,6 +11,7 @@ class ConnectedUseCase:
         self.__homegraph = homegraph
 
     def execute(self, payload: Connected):
+        payload.client_id = payload.client_id[:20]
         device = self.__firebase.get_device(payload.client_id)
         if not device:
             device = Device()
