@@ -59,7 +59,7 @@ class DeleteDeviceUseCase:
         user.devices = [
             user_device 
             for user_device in user.devices 
-            if user_device != request.id
+            if user_device.id != request.id
         ]
         self.__firebase.create_user(user) 
         self.__homegraph.request_sync(user.user_id)
