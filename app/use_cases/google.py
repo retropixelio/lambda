@@ -70,7 +70,7 @@ class SmarthomeUseCase:
                                 "brightness": int(excecute.params["brightness"] * 255 / 100)
                             })
                         )
-                device = self.__firebase.get_device(id)
+                device = self.__firebase.get_device(id[:20])
                 if not device.online: 
                     payload = {
                         "ids": [id],
