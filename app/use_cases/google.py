@@ -41,9 +41,9 @@ class SmarthomeUseCase:
                     payload["states"]["online"] = True
                     if excecute.command == "action.devices.commands.OnOff":
                         self.__mqtt.publish(
-                            id,
+                            id[:20],
                             json.dumps({
-                                "deviceId": id,
+                                "deviceId": id[:20],
                                 "onoff": excecute.params["on"]
                             })
                         )
@@ -89,7 +89,7 @@ class SmarthomeUseCase:
     def __query(self, body: Input, req_id):
         payload = {}
         for device in body.payload.devices:
-            data = self.__firebase.get_device(device.id)
+            data = self.__firebase.get_device(device.id[:20])
             if data.online:
                 payload[device.id] = {
                     "on": data.onoff,
@@ -114,34 +114,12 @@ class SmarthomeUseCase:
         return response
             
     def __sync(self, id):
-        user = self.__firebase.get_user_info()
-        for device in user.devices:
-            data = self.__firebase.get_device(device.id)
-            if not data:
-                data = Device(
-                    device_id = device.id,
-                    users= [user.user_id],
-                    name = device.nickname,
-                    online = False,
-                    ip = "0.0.0.0",
-                    onoff = False,
-                    ambilight = False,
-                    chrome = 0,
-                    color = Color(
-                        p = 16777215,
-                        s = 16777215,
-                        t = 16777215,
-                    ),
-                    brightness = 100,
-                    speed = 1000,
-                )
-                self.__firebase.set_state(data)
         return {
             "requestId": id,
             "payload": {
                 "agentUserId": self.__firebase.get_user(),
                 "devices": [{
-                    "id": device.id,
+                    "id": self.__firebase.get_device(device.id).id,
                     "type": "action.devices.types.LIGHT",
                     "traits": [
                         "action.devices.traits.OnOff",
@@ -168,6 +146,6 @@ class SmarthomeUseCase:
                         "hwVersion": "1.0",
                         "swVersion": "1.0"
                     }
-                } for device in user.devices]
+                } for device in self.__firebase.get_user_info().devices]
             }
         }
