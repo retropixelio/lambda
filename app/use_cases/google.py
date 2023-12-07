@@ -41,7 +41,7 @@ class SmarthomeUseCase:
                     payload["states"]["online"] = True
                     if excecute.command == "action.devices.commands.OnOff":
                         self.__mqtt.publish(
-                            id[:20],
+                            id,
                             json.dumps({
                                 "deviceId": id[:20],
                                 "onoff": excecute.params["on"]
@@ -53,7 +53,7 @@ class SmarthomeUseCase:
                         self.__mqtt.publish(
                             id,
                             json.dumps({
-                                "deviceId": id,
+                                "deviceId": id[:20],
                                 "color": {
                                     "red": rgb[0],
                                     "green": rgb[1],
@@ -66,7 +66,7 @@ class SmarthomeUseCase:
                         self.__mqtt.publish(
                             id,
                             json.dumps({
-                                "deviceId": id,
+                                "deviceId": id[:20],
                                 "brightness": int(excecute.params["brightness"] * 255 / 100)
                             })
                         )
@@ -97,7 +97,7 @@ class SmarthomeUseCase:
                     "color": {
                         "spectrumRGB": data.color.p
                     },
-                    "brightness": int(data.brightness),
+                    "brightness": int(data.brightness * 100 / 255),
                     "status": "SUCCESS"
                 }
             else: 
