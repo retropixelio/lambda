@@ -35,6 +35,7 @@ class HomeGraphRepository:
             raise Exception("Homegraph not authenticated")
 
     def request_sync(self, user_id):
+        return
         response = requests.post(
             'https://homegraph.googleapis.com/v1/devices:requestSync',
             json={
@@ -50,6 +51,7 @@ class HomeGraphRepository:
             raise Exception(message["error"]["message"])
         
     def report_state(self, user_id, device: Device):
+        return
         response = requests.post(
             'https://homegraph.googleapis.com/v1/devices:reportStateAndNotification',
             json={
