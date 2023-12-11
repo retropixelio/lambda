@@ -1,4 +1,4 @@
-from utils.api_view import APIView, TokenAuthentication
+from utils.api_view import APIView, FirebaseAuthentication
 
 from request_objects.device import Device
 
@@ -8,7 +8,7 @@ from repos.homegraph import HomeGraphRepository
 from use_cases.devices import DevicesUseCase, AddDeviceUseCase, DeleteDeviceUseCase
 
 class DevicesView(APIView):
-    authentication_classes = [TokenAuthentication]
+    authentication_classes = [FirebaseAuthentication]
 
     def get(self):
         firebase_repo = FirebaseRepository(self.user)

@@ -1,4 +1,4 @@
-from utils.api_view import APIView, TokenAuthentication
+from utils.api_view import APIView, FirebaseAuthentication
 
 from repos.mqtt import Mqtt
 
@@ -7,7 +7,7 @@ from use_cases.set import SetUseCase
 from request_objects.set import Set
 
 class SetView(APIView):
-    authentication_classes = [TokenAuthentication]
+    authentication_classes = [FirebaseAuthentication]
 
     def post(self):
         request_obj = [Set.from_dict(item) for item in self.request.json()]

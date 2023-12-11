@@ -1,5 +1,5 @@
 from domain.event import Request
-from domain.authentication import Token
+from domain.authentication import Token, FirebaseToken
 from repos.response import response_object
 
 class TokenAuthentication:
@@ -7,8 +7,18 @@ class TokenAuthentication:
         try:
             token = Token(token=request.headers.authorization[7:])
             user = token.decode()
-            return user.user
+            return user.user_id
         except:
+            return False
+        
+class FirebaseAuthentication:
+    def authenticate(self, request: Request):
+        try:
+            token = FirebaseToken(token=request.headers.authorization[7:])
+            user = token.decode()
+            return user.user_id
+        except Exception as e:
+            print(e)
             return False
 
 class APIView:

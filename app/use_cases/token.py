@@ -19,12 +19,12 @@ class TokenUseCase:
                 return response_object({'error':'invalid_grant'}, 400)
             access = jwt.encode({
                 "token_type": "access",
-                "user": user["user"], 
+                "user_id": user["user_id"], 
                 "exp":datetime.datetime.now() + datetime.timedelta(hours=24)
             }, settings.SECRET, algorithm="HS256")
             refresh = jwt.encode({
                 "token_type": "refresh",
-                "user": user["user"]
+                "user_id": user["user_id"]
             }, settings.SECRET, algorithm="HS256")
             payload = {
                 "token_type": "Bearer",
@@ -41,7 +41,7 @@ class TokenUseCase:
                 return response_object({'error':'invalid_grant'}, 400)
             access = jwt.encode({
                 "token_type": "access",
-                "user": user["user"],
+                "user_id": user["user_id"],
                 "exp": datetime.datetime.now() + datetime.timedelta(hours=24)
             }, settings.SECRET, algorithm="HS256")
             payload = {

@@ -1,4 +1,4 @@
-from utils.api_view import APIView, TokenAuthentication
+from utils.api_view import APIView, FirebaseAuthentication
 
 from repos.firebase import FirebaseRepository
 
@@ -7,7 +7,7 @@ from use_cases.query import QueryUseCase
 from request_objects.query import Query
 
 class QueryView(APIView):
-    authentication_classes = [TokenAuthentication]
+    authentication_classes = [FirebaseAuthentication]
 
     def get(self):
         request_obj = Query.from_dict(self.request.query_string_parameters)

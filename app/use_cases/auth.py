@@ -46,7 +46,7 @@ class PostAuthUseCase:
         verify = user.password
         if bcrypt.checkpw(password.encode('utf-8'), verify.encode('utf-8')):
             code = TokenDecoded(
-                user = user.user_id,
+                user_id = user.user_id,
                 token_type = 'access',
             )
             return redirect(f'{url}?code={code.encode().token}&state={state}')
