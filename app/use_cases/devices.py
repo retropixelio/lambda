@@ -12,7 +12,7 @@ class DevicesUseCase:
 
     def execute(self):
         user = self.__firebase.get_user_info()
-        if not user.devices: 
+        if not user or not user.devices: 
             return response_object({
                 'list': [],
                 'states': {}

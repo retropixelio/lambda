@@ -11,9 +11,5 @@ class UserDevice(FromDictMixin):
 
 @dataclasses.dataclass
 class User(FromDictMixin):
-    active: bool = False
     devices: List[UserDevice] = dataclasses.field(default_factory=list)
     user_id: str = None
-    first_name: str = None
-    last_name: str = None
-    password: str = None

@@ -22,15 +22,7 @@ class FirebaseRepository:
             Key={'userId': self.get_user()}
         )
         item = response.get('Item')
-        return User.from_dict(item) if item else None
-    
-    def get_user_by_email(self, email):
-        users = dynamodb_client.Table('users')
-        response = users.get_item(
-            Key={'userId': email}
-        )
-        item = response.get('Item')
-        return User.from_dict(item) if item else None
+        return User.from_dict(item) if item else User(user_id=self.get_user())
         
     def create_user(self, user: User):
         users = dynamodb_client.Table('users')
