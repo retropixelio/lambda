@@ -35,7 +35,7 @@ class PostAuthUseCase:
             )
         )
         template = environment.get_template('login.html')
-        access_key = form.get('access')[0]
+        access_key = form.get('access_key')[0]
         access = self.__firebase.get_credential(access_key)
         url = args.get('redirect_uri')
         state = args.get('state')
@@ -45,6 +45,7 @@ class PostAuthUseCase:
                 user_id = user.user_id,
                 token_type = 'access',
             )
+            self.__firebase.delete_credential(access_key)
             return redirect(f'{url}?code={code.encode().token}&state={state}')
         else:
             template = template.render(state=state,url=url)
