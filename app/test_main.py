@@ -106,6 +106,7 @@ class MockRequest:
 @patch("repos.firebase.FirebaseRepository.create_user", return_value=None)
 @patch("repos.firebase.FirebaseRepository.update_state", return_value=None)
 @patch("repos.firebase.FirebaseRepository.get_credential", return_value=credential)
+@patch("repos.firebase.FirebaseRepository.delete_credential", return_value=None)
 @patch("repos.homegraph.HomeGraphRepository.request_sync", return_value=None)
 @patch("repos.homegraph.HomeGraphRepository.report_state", return_value=None)
 class TestGlobal:
