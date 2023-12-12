@@ -20,8 +20,8 @@ device_id = "1"
 
 
 data = {
-  "iss": "https://securetoken.google.com/retropixel-396819",
-  "aud": "retropixel-396819",
+  "iss": "https://securetoken.google.com/retropixel-62580",
+  "aud": "retropixel-62580",
   "user_id": "uG9LmlizZvWPalAgyWG70cXG8w03",
   "sub": "uG9LmlizZvWPalAgyWG70cXG8w03",
   "phone_number": "+16505551234",
