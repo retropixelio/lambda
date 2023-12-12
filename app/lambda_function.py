@@ -13,6 +13,7 @@ from views.query import QueryView
 from views.connected import ConnectedView
 from views.state import StateView
 from views.auth import AuthView
+from views.credentials import CredentialsView
 from views.smarthome import SmarthomeView
 
 def lambda_handler(event: dict, _):
@@ -34,6 +35,7 @@ def lambda_handler(event: dict, _):
             '/default/RetroPixelApi/query': QueryView(request),
             '/default/RetroPixelApi/auth': AuthView(request),
             '/default/RetroPixelApi/token': TokenView(request),
+            '/default/RetroPixelApi/credentials': CredentialsView(request),
             '/default/RetroPixelApi/smarthome': SmarthomeView(request),
         }
         request = urls.get(request.path)

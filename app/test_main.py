@@ -10,7 +10,7 @@ import base64
 
 from conf import settings
 from lambda_function import lambda_handler
-from domain.user import User, UserDevice
+from domain.user import User, UserDevice, AccessKey
 from domain.device import Device
 from utils.cert import generate_certificate
 
@@ -75,6 +75,11 @@ user = User(
     user_id = user_id,
 )
 
+credential = AccessKey(
+    third_party_credential='abc123',
+    user_id=user_id,
+)
+
 def request_object(path, method = 'GET', authorization = None, query = None, body = None):
     return {
         "path": path,
@@ -94,11 +99,13 @@ class MockRequest:
 @patch("repos.mqtt.Mqtt.publish", return_value=None)
 @patch("domain.authentication.requests.get", return_value=MockRequest)
 @patch("repos.firebase.FirebaseRepository.get_user_info", return_value=user)
+@patch("repos.firebase.FirebaseRepository.search_user", return_value=user)
 @patch("repos.firebase.FirebaseRepository.set_device", return_value=None)
 @patch("repos.firebase.FirebaseRepository.get_device", return_value=device)
 @patch("repos.firebase.FirebaseRepository.set_state", return_value=None)
 @patch("repos.firebase.FirebaseRepository.create_user", return_value=None)
 @patch("repos.firebase.FirebaseRepository.update_state", return_value=None)
+@patch("repos.firebase.FirebaseRepository.get_credential", return_value=credential)
 @patch("repos.homegraph.HomeGraphRepository.request_sync", return_value=None)
 @patch("repos.homegraph.HomeGraphRepository.report_state", return_value=None)
 class TestGlobal:
@@ -121,22 +128,22 @@ class TestGlobal:
         response = lambda_handler(login_object, None)
         assert response['statusCode'] == 200
 
-    # def test_auth_post(self, *_):
-    #     form = {'userid': [user_id], 'password': [password]}
-    #     body = base64.b64encode(urlencode(form, doseq=True).encode('utf-8')).decode('utf-8')
-    #     login_object = request_object(
-    #         '/default/RetroPixelApi/auth', 
-    #         method = 'POST',
-    #         query={
-    #             'client_id': 'andres64372', 
-    #             'redirect_uri': 'https://oauth-redirect.googleusercontent.com/r/retropixel-8f415', 
-    #             'response_type': 'code', 
-    #             'state': 'AEZvaVHDPEYOEoMZ5cbhFp2RJxaNZXHNaomAjuNx2h_wLbjqCFkQQFIQNvRRI1TTSnkQK9MRIoZ_vfH5ijm4oUXK1qR0nHcWRrBgw9HAIcrBP2O5oeE02LTI8uQtlkOHle1zZFGWn7fil0yKipP1GsSNPsXzmpU7onguAaO3lL-Fj3HPlTpAj23NKXBC7_yOV1jDMN10cUpkv8iXpmFXZRdovBV9ikYwTI8oXCbVntmwVEZjtqxrlv5dZd87a5Klx_bNa9TUehj66ujCQJnv9zVuZL-vARZZZXEFxEXiR099XtXlY7Sc-WOFI-8h22Mh5TqA7AjMbiGgAuDcHugGETCq9k-8asjN52IypfJLVSOC7oBfHIx3bA_tccG49nlZVNpg886NT1P-yAvVcmR9QR9Kz8NP_jt2_vgO21h31n2KyTNiWBn63IGN8_iG8FNmICkUBj3iVHgeYnE1SBsV3sf4deiqlzA2GzB5f-5J4vs1gKfPdqH71dpK4pd_sz6j2jXAMlVBSAA_J_fJRyfzkIbFac4y5zY3lKvjQy44GvneGpDCABvNHw9gbv3pIm28yJEanCsJzEUlzopo4jFvDCftneEawa-RR63cAPH9WtSs6-9aGU4UZFgltiP-fuT_hipK1Q_FdahcU8_zgIjCBSG0PyP5cILh39rf1tSPenscKan6mmdx6Ck'
-    #         }, 
-    #         body = body
-    #     )
-    #     response = lambda_handler(login_object, None)
-    #     assert response['statusCode'] == 301
+    def test_auth_post(self, *_):
+        form = {'access': ['abc123']}
+        body = base64.b64encode(urlencode(form, doseq=True).encode('utf-8')).decode('utf-8')
+        login_object = request_object(
+            '/default/RetroPixelApi/auth', 
+            method = 'POST',
+            query={
+                'client_id': 'andres64372', 
+                'redirect_uri': 'https://oauth-redirect.googleusercontent.com/r/retropixel-8f415', 
+                'response_type': 'code', 
+                'state': 'AEZvaVHDPEYOEoMZ5cbhFp2RJxaNZXHNaomAjuNx2h_wLbjqCFkQQFIQNvRRI1TTSnkQK9MRIoZ_vfH5ijm4oUXK1qR0nHcWRrBgw9HAIcrBP2O5oeE02LTI8uQtlkOHle1zZFGWn7fil0yKipP1GsSNPsXzmpU7onguAaO3lL-Fj3HPlTpAj23NKXBC7_yOV1jDMN10cUpkv8iXpmFXZRdovBV9ikYwTI8oXCbVntmwVEZjtqxrlv5dZd87a5Klx_bNa9TUehj66ujCQJnv9zVuZL-vARZZZXEFxEXiR099XtXlY7Sc-WOFI-8h22Mh5TqA7AjMbiGgAuDcHugGETCq9k-8asjN52IypfJLVSOC7oBfHIx3bA_tccG49nlZVNpg886NT1P-yAvVcmR9QR9Kz8NP_jt2_vgO21h31n2KyTNiWBn63IGN8_iG8FNmICkUBj3iVHgeYnE1SBsV3sf4deiqlzA2GzB5f-5J4vs1gKfPdqH71dpK4pd_sz6j2jXAMlVBSAA_J_fJRyfzkIbFac4y5zY3lKvjQy44GvneGpDCABvNHw9gbv3pIm28yJEanCsJzEUlzopo4jFvDCftneEawa-RR63cAPH9WtSs6-9aGU4UZFgltiP-fuT_hipK1Q_FdahcU8_zgIjCBSG0PyP5cILh39rf1tSPenscKan6mmdx6Ck'
+            }, 
+            body = body
+        )
+        response = lambda_handler(login_object, None)
+        assert response['statusCode'] == 301
 
     def test_token_auth(self, *_):
         form = {'grant_type': ['authorization_code'], 'code': [self.token]}

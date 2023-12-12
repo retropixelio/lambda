@@ -1,7 +1,7 @@
 import boto3
 from boto3_type_annotations.dynamodb import ServiceResource
 
-from domain.user import User
+from domain.user import User, AccessKey
 from domain.device import Device
 
 dynamodb_client : ServiceResource = boto3.resource(
@@ -23,6 +23,14 @@ class FirebaseRepository:
         )
         item = response.get('Item')
         return User.from_dict(item) if item else User(user_id=self.get_user())
+    
+    def search_user(self, user_id: str):
+        users = dynamodb_client.Table('users')
+        response = users.get_item(
+            Key={'userId': user_id}
+        )
+        item = response.get('Item')
+        return User.from_dict(item) if item else None
         
     def create_user(self, user: User):
         users = dynamodb_client.Table('users')
@@ -61,3 +69,25 @@ class FirebaseRepository:
                 state: value,
             },
         )
+
+    def get_credential(self, access_key):
+        devices = dynamodb_client.Table('accessKeys')
+        response = devices.get_item(
+            Key={'thirdPartyCredential': access_key}
+        )
+        item = response.get('Item')
+        return AccessKey.from_dict(item) if item else None
+    
+    def create_credential(self, access_key: AccessKey):
+        access_keys = dynamodb_client.Table('accessKeys')
+        response = access_keys.put_item(Item=access_key.to_dict())
+        if response['ResponseMetadata']['HTTPStatusCode'] != 200:
+            raise 'Error'
+        
+    def delete_credential(self, access_key: str):
+        access_keys = dynamodb_client.Table('accessKeys')
+        response = access_keys.delete_item(
+            Key={'thirdPartyCredential': access_key}
+        )
+        if response['ResponseMetadata']['HTTPStatusCode'] != 200:
+            raise 'Error'

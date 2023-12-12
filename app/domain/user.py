@@ -13,3 +13,10 @@ class UserDevice(FromDictMixin):
 class User(FromDictMixin):
     devices: List[UserDevice] = dataclasses.field(default_factory=list)
     user_id: str = None
+    third_party_credential: str = None
+
+@dataclasses.dataclass
+class AccessKey(FromDictMixin):
+    third_party_credential: str = None
+    user_id: str = None
+    expiration: int = None

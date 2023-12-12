@@ -22,21 +22,17 @@
         <div class="row justify-content-center my-5">
             <form action="" method="post">
                 <div class="mb-3">
-                  <label for="exampleInputEmail1" class="form-label" >Email</label>
+                  <label for="exampleInputEmail1" class="form-label" >Verification Code</label>
                   <input name="userid" type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" required>
-                </div>
-                <div class="mb-3">
-                  <label for="exampleInputPassword1" class="form-label">Contraseña</label>
-                  <input name="password" type="password" class="form-control" id="exampleInputPassword1" required>
                 </div>
                 <div class="justify-content-right" style="text-align:right">
                     <button type="submit" class="btn btn-primary">Ingresar</button>
                 </div>
-                <p {{invalid}} style="color:red">Datos erroneos</p>
+                <p {{invalid}} style="color:red">Invalid Data</p>
               </form>
               <div class="row align-items-center my-5"> 
                 <div class="alert alert-primary" role="alert">
-                    Al ingresar autorizas a Google y Amazon-Alexa a acceder a tus dispositivos
+                    By Sign-In you grant Google and Amazon-Alexa to access your devices
                 </div>
               </div>
         </div>

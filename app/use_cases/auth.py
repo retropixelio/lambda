@@ -25,7 +25,7 @@ class PostAuthUseCase:
     def __init__(self, firebase: FirebaseRepository):
         self.__firebase = firebase
 
-    def execute(self, body, args):
+    def execute(self, body: str, args: dict):
         out = base64.b64decode(body).decode('utf-8')
         form = parse_qs(out)
         environment = Environment(
@@ -35,16 +35,12 @@ class PostAuthUseCase:
             )
         )
         template = environment.get_template('login.html')
-        user = form.get('userid')[0]
-        password = form.get('password')[0]
+        access_key = form.get('access')[0]
+        access = self.__firebase.get_credential(access_key)
         url = args.get('redirect_uri')
         state = args.get('state')
-        user = self.__firebase.get_user_by_email(user)
-        if not user: 
-            template = template.render(state=state,url=url)
-            return response_object(template, 200, 'text/html')
-        verify = user.password
-        if bcrypt.checkpw(password.encode('utf-8'), verify.encode('utf-8')):
+        if access:
+            user = self.__firebase.search_user(access)
             code = TokenDecoded(
                 user_id = user.user_id,
                 token_type = 'access',
