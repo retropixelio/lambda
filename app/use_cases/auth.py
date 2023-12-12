@@ -40,7 +40,7 @@ class PostAuthUseCase:
         url = args.get('redirect_uri')
         state = args.get('state')
         if access:
-            user = self.__firebase.search_user(access)
+            user = self.__firebase.search_user(access.user_id)
             code = TokenDecoded(
                 user_id = user.user_id,
                 token_type = 'access',
