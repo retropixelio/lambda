@@ -129,7 +129,7 @@ class TestGlobal:
         assert response['statusCode'] == 200
 
     def test_auth_post(self, *_):
-        form = {'access': ['abc123']}
+        form = {'access_key': ['abc123']}
         body = base64.b64encode(urlencode(form, doseq=True).encode('utf-8')).decode('utf-8')
         login_object = request_object(
             '/default/RetroPixelApi/auth', 
