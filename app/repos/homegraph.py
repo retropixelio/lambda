@@ -39,13 +39,13 @@ class HomeGraphRepository:
             message = response.json()
             raise Exception(message["error"]["message"])
         
-    def report_state(self, user_id, device: Device):
+    def report_state(self, user_id: str, device: Device):
         data = {
             "agentUserId": user_id,
             "payload": {
                 "devices":{
                     "states":{
-                        device.device_id:{
+                        device.id:{
                             "on": device.onoff,
                             "online": device.online,
                             "brightness": int(device.brightness * 100 / 255),
@@ -65,7 +65,6 @@ class HomeGraphRepository:
                 'Authorization': f'Bearer {self.__token}'
             }
         )
-        print(response.json())
         if not response.ok:
             message = response.json()
             raise Exception(message["error"]["message"])
