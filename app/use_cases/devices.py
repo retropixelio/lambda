@@ -1,6 +1,5 @@
 from request_objects.device import Device as DeviceRequest
 from domain.user import UserDevice
-from domain.device import Device, Color
 
 from repos.firebase import FirebaseRepository
 from repos.homegraph import HomeGraphRepository
