@@ -49,9 +49,9 @@ class AddDeviceUseCase:
             device.users = list(set(device.users))
             self.__firebase.create_user(user)
             self.__homegraph.request_sync(user.user_id)
-            return response_object({'message': 'Device already paired'}, 201)
+            return response_object({'message': 'Device paired'}, 201)
         else:
-            return response_object({}, 400)
+            return response_object({'message': 'Device already paired'}, 400)
     
 class DeleteDeviceUseCase:
     def __init__(self, firebase: FirebaseRepository, homegraph: HomeGraphRepository):
@@ -60,10 +60,16 @@ class DeleteDeviceUseCase:
     
     def execute(self, request: DeviceRequest):
         user = self.__firebase.get_user_info()
+        device = self.__firebase.get_device(request.id)
         user.devices = [
             user_device 
             for user_device in user.devices 
             if user_device.id != request.id
+        ]
+        device.users = [
+            item
+            for item in device.users
+            if item != user.user_id
         ]
         self.__firebase.create_user(user) 
         self.__homegraph.request_sync(user.user_id)
