@@ -5,24 +5,24 @@ import time
 from conf import settings
 from domain.device import Device
 
-iat = time.time()
-exp = iat + 3600
-credentials = {
-    'iss': 'firebase-adminsdk-rnn2v@retropixel-96fca.iam.gserviceaccount.com',
-    'sub': 'firebase-adminsdk-rnn2v@retropixel-96fca.iam.gserviceaccount.com',
-    'aud': 'https://homegraph.googleapis.com/',
-    'iat': iat,
-    'exp': exp
-}
-header = {
-    'kid': '4ea10d0164c2f9ae3b870acadbbe68c1371a615d'
-}
-secret = "-----BEGIN PRIVATE KEY-----\n" + settings.PRIVATE_KEY.replace('\\n', '\n') + "\n-----END PRIVATE KEY-----\n"
-code = jwt.encode(credentials, secret.encode("utf-8"), 'RS256', header)
+# iat = time.time()
+# exp = iat + 3600
+# credentials = {
+#     'iss': 'firebase-adminsdk-rnn2v@retropixel-96fca.iam.gserviceaccount.com',
+#     'sub': 'firebase-adminsdk-rnn2v@retropixel-96fca.iam.gserviceaccount.com',
+#     'aud': 'https://homegraph.googleapis.com/',
+#     'iat': iat,
+#     'exp': exp
+# }
+# header = {
+#     'kid': '4ea10d0164c2f9ae3b870acadbbe68c1371a615d'
+# }
+# secret = "-----BEGIN PRIVATE KEY-----\n" + settings.PRIVATE_KEY.replace('\\n', '\n') + "\n-----END PRIVATE KEY-----\n"
+# code = jwt.encode(credentials, secret.encode("utf-8"), 'RS256', header)
 
 class HomeGraphRepository:
     def __init__(self):
-        self.__token = code
+        self.__token = None
 
     def request_sync(self, user_id):
         return
