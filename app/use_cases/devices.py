@@ -36,14 +36,17 @@ class AddDeviceUseCase:
         self.__firebase = firebase
         self.__homegraph = homegraph
     
-    def execute(self, device: DeviceRequest):
+    def execute(self, request: DeviceRequest):
         user = self.__firebase.get_user_info()
-        if device.id not in [user_device.id for user_device in user.devices]:
+        if request.id not in [user_device.id for user_device in user.devices]:
             user.devices.append(UserDevice(
-                id = device.id,
-                nickname = device.nickname,
-                room = device.room
+                id = request.id,
+                nickname = request.nickname,
+                room = request.room
             ))
+            device = self.__firebase.get_device(request.id)
+            device.users.append(user.user_id)
+            device.users = list(set(device.users))
             self.__firebase.create_user(user)
             self.__homegraph.request_sync(user.user_id)
             return response_object({'message': 'Device already paired'}, 201)
