@@ -48,6 +48,7 @@ class AddDeviceUseCase:
             device.users.append(user.user_id)
             device.users = list(set(device.users))
             self.__firebase.create_user(user)
+            self.__firebase.set_state(device)
             self.__homegraph.request_sync(user.user_id)
             return response_object({'message': 'Device paired'}, 201)
         else:
