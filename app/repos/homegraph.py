@@ -45,7 +45,7 @@ class HomeGraphRepository:
             "payload": {
                 "devices":{
                     "states":{
-                        device.id:{
+                        device.device_id:{
                             "on": device.onoff,
                             "online": device.online,
                             "brightness": int(device.brightness * 100 / 255),
