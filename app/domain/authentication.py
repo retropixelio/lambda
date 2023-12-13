@@ -50,7 +50,6 @@ class Token:
         token = TokenDecoded.from_dict(
             jwt.decode(self.token, settings.SECRET, algorithms=["HS256"])
         )
-        print(token)
         return token
 
 @dataclasses.dataclass

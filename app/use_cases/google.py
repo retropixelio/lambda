@@ -1,6 +1,5 @@
 import json
 
-from domain.device import Device, Color
 from request_objects.smarthome import Smarthome, Input
 from repos.firebase import FirebaseRepository
 from repos.mqtt import Mqtt
@@ -135,7 +134,7 @@ class SmarthomeUseCase:
                             device.nickname
                         ]
                     },
-                    "willReportState": False,
+                    "willReportState": True,
                     "roomHint": device.room,
                     "attributes": {
                         "colorModel": "rgb",
